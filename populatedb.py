@@ -4,6 +4,9 @@ from django.db.utils import IntegrityError
 
 
 def populate_db(root_directory=None):
+    if root_directory is None:
+        sys.stdout.write("You must set ROOT_DIRECTORY variable in settings file.\n")
+        sys.exit(0)
     from directories.models import (
         Directory, RootDirectory, DirectoryItem,
     )
@@ -15,7 +18,12 @@ def populate_db(root_directory=None):
         sys.exit(1)
     root_directory_id = root_directory.id
     root_directory_path = root_directory.path
-    root_directory = os.listdir(root_directory.path)
+    try:
+        root_directory = os.listdir(root_directory.path)
+    except FileNotFoundError:
+        RootDirectory.objects.using("directories").last().delete()
+        sys.stdout.write("Root path cannot be found.\n")
+        sys.exit(1)
     for i in root_directory:
         directory = Directory(root_dir_id=root_directory_id, path=i, is_classified=0)
         directory.save(using="directories")

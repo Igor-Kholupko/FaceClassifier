@@ -91,7 +91,7 @@ DATABASES = {
 # Path to directory which content will be imported
 # to directories DB at 'django-admin --importdirs' command.
 
-ROOT_DIRECTORY = 'D:/test/'
+ROOT_DIRECTORY = None
 
 
 # Password validation
