@@ -13,6 +13,7 @@ class RootDirectory(models.Model):
 
 
 class Directory(models.Model):
+    root_dir_id = models.IntegerField()
     path = models.CharField(max_length=256)
     is_classified = models.BooleanField(default=False)
 
@@ -25,8 +26,8 @@ class Directory(models.Model):
 
 
 class DirectoryItem(models.Model):
-    name = models.CharField(max_length=256)
     dir_id = models.IntegerField()
+    name = models.CharField(max_length=256)
     is_bad = models.BooleanField()
 
     def __str__(self):
