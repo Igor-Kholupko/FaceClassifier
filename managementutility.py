@@ -14,10 +14,17 @@ from populatedb import populate_db
 
 
 class FaceClassifierManagementUtility(ManagementUtility):
+    """
+    User defined class inherited from "ManagementUtility" class that
+    encapsulate the logic of the django-admin and manage.py utilities.
+    """
     def execute(self):
         """
         Given the command-line arguments, figure out which subcommand is being
         run, create a parser appropriate to that command, and run it.
+
+        !!! OVERRIDED !!!
+        Adding new user defined command-line arguments.
         """
         try:
             subcommand = self.argv[1]
@@ -79,11 +86,13 @@ class FaceClassifierManagementUtility(ManagementUtility):
                 sys.stdout.write(self.main_help_text() + '\n')
             else:
                 self.fetch_command(options.args[0]).print_help(self.prog_name, options.args[0])
-        # Special-cases: We want 'django-admin --version' and
-        # 'django-admin --help' to work, for backwards compatibility.
+        # Special-cases: We want 'django-admin --version',
+        # 'django-admin --help' to work, for backwards compatibility and
+        # !!! USER DEFINED !!!
+        # 'django-admin --importdirs' to pre-populate directories database.
         elif subcommand == 'version' or self.argv[1:] == ['--version']:
             sys.stdout.write(django.get_version() + '\n')
-        elif subcommand == 'importdirs':
+        elif subcommand == 'importdirs' or self.argv[1:] == ['--importdirs']:
             populate_db(settings.ROOT_DIRECTORY)
         elif self.argv[1:] in (['--help'], ['-h']):
             sys.stdout.write(self.main_help_text() + '\n')
@@ -92,6 +101,6 @@ class FaceClassifierManagementUtility(ManagementUtility):
 
 
 def execute_from_command_line(argv=None):
-    """Run a ManagementUtility."""
+    """Run a FaceClassifierManagementUtility."""
     utility = FaceClassifierManagementUtility(argv)
     utility.execute()

@@ -1,6 +1,17 @@
 from django.db import models
 
 
+class RootDirectory(models.Model):
+    path = models.CharField(max_length=256, unique=True)
+
+    def __str__(self):
+        return "%s" % self.path
+
+    class Meta:
+        verbose_name = "Root Directory"
+        verbose_name_plural = "Root Directories"
+
+
 class Directory(models.Model):
     path = models.CharField(max_length=256)
     is_classified = models.BooleanField(default=False)
@@ -11,3 +22,16 @@ class Directory(models.Model):
     class Meta:
         verbose_name = 'Directory'
         verbose_name_plural = 'Directories'
+
+
+class DirectoryItem(models.Model):
+    name = models.CharField(max_length=256)
+    dir_id = models.IntegerField()
+    is_bad = models.BooleanField()
+
+    def __str__(self):
+        return "%s" % self.name
+
+    class Meta:
+        verbose_name = "Directory Item"
+        verbose_name_plural = "Directory Items"
