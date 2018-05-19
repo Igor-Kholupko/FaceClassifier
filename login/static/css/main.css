@@ -214,3 +214,7 @@ hr {
 	 text-transform: capitalize;
 	 transition: all 0.5s ease 0s;
 }
+
+.checking {
+	background-color:green
+}

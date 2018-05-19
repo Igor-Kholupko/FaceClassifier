@@ -25,7 +25,7 @@ SECRET_KEY = 'x7s5pos*@$1^$8&vi7)3#f-0torzy(awk(@@l=pm15&nk!w_(#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1","127.0.0.2"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -127,11 +127,12 @@ USE_TZ = True
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/workspace'
+LOGOUT_REDIRECT_URL = '/accounts/login'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 MEDIA_ROOT = ROOT_DIRECTORY
 MEDIA_URL = '/media/'
