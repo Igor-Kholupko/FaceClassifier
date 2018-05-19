@@ -13,9 +13,10 @@ class RootDirectory(models.Model):
 
 
 class Directory(models.Model):
-    root_dir_id = models.IntegerField()
+    root_dir = models.ForeignKey(RootDirectory, on_delete=models.CASCADE)
     path = models.CharField(max_length=256)
-    is_classified = models.BooleanField(default=False)
+    classifications_amount = models.PositiveIntegerField(default=0)
+    directory_class = models.TextField(default="")
 
     def __str__(self):
         return "%s" % self.path
@@ -26,9 +27,11 @@ class Directory(models.Model):
 
 
 class DirectoryItem(models.Model):
-    dir_id = models.IntegerField()
+    dir = models.ForeignKey(Directory, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
     is_bad = models.BooleanField()
+    thumbnail_100x100 = models.ImageField(upload_to="", default=None)
+    thumbnail_200x200 = models.ImageField(upload_to="", default=None)
 
     def __str__(self):
         return "%s" % self.name

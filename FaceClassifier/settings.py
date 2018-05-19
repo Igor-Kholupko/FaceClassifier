@@ -25,7 +25,7 @@ SECRET_KEY = 'x7s5pos*@$1^$8&vi7)3#f-0torzy(awk(@@l=pm15&nk!w_(#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1","127.0.0.2"]
 
 
 # Application definition
@@ -56,8 +56,7 @@ ROOT_URLCONF = 'FaceClassifier.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -91,7 +90,7 @@ DATABASES = {
 # Path to directory which content will be imported
 # to directories DB at 'django-admin --importdirs' command.
 
-ROOT_DIRECTORY = None
+ROOT_DIRECTORY = "D:\\test"
 
 
 # Password validation
@@ -132,3 +131,5 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+MEDIA_ROOT = ROOT_DIRECTORY
+MEDIA_URL = '/media/'
