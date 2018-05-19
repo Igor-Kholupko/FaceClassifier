@@ -21,6 +21,13 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+<<<<<<< HEAD
     path('login/', include('login.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)\
   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+=======
+    path('', include('login.urls')),
+    path('workspace/', include('workspace.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+>>>>>>> 8d6457ce654696b0dd6d9f4001a0f16a4e0fa6e4

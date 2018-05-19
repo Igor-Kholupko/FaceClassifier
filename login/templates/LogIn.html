@@ -24,29 +24,36 @@
 	<div class="container login-container">
 		 <div class="row justify-content-md-center">
 		 <div class="col-md-offset-3 col-md-6">
-			 <form class="form-horizontal">
+			 <form class="form-horizontal" method="post" action="{% url 'login' %}">
 				 <span class="heading">Log in</span>
 				 <div class="form-group">
-					 <input type="email" class="form-control" id="inputEmail" placeholder="E-mail">
+                     {{ form.username }}
+					 <input type="email" class="form-control" id="inputEmail" placeholder="E-mail" >
 					 <i class="fa fa-user"></i>
 				 </div>
 				 <div class="form-group help">
-					 <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                     {{ form.password }}
+					 <input type="password" class="form-control" id="inputPassword" placeholder="Password" >
 					 <i class="fa fa-lock"></i>
 				 </div>
+                 {% if form.errors %}
+                     <div>
+                        <span class="text">There's something wrong with what you entered!</span>
+                     </div>
+                 {%  endif %}
+                {% if next %}
+                     <div>
+                        <span class="text">Hey, you can't access this page!</span>
+                     </div>
+                {%  endif %}
 				 <div class="form-group">
 					 <div class="main-checkbox">
 						 <input type="checkbox" value="none" id="checkbox1" name="check"/>
 						 <label for="checkbox1"></label>
 					 </div>
 					 <span class="text">Remember me</span>
-					 <input type="button" value="Log In" class="btn btn-default" onclick="loginBut()"/>
-					 <script>
-						function loginBut()
-						{
-						     window.location = "/template/Main.html"
-						}
-					</script>
+					 <input type="button" value="Log In" class="btn btn-default"/>
+                    <input type="hidden" name="next" value="{{ next }}">
 				 </div>
 			 </form>
 		 </div>

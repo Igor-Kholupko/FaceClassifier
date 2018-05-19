@@ -198,3 +198,19 @@ hr {
   color: #fff;
   background-color: #5cb85c;
 }
+
+.form-horizontal .down{
+    height: 55px;
+}
+
+.form-horizontal .btn{
+
+	 font-size: 14px;
+	 color: #fff;
+	 background: #00b4ef;
+	 border-radius: 5px;
+	 padding: 8px 30px;
+	 border: none;
+	 text-transform: capitalize;
+	 transition: all 0.5s ease 0s;
+}
