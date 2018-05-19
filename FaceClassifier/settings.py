@@ -90,7 +90,15 @@ DATABASES = {
 # Path to directory which content will be imported
 # to directories DB at 'django-admin --importdirs' command.
 
-ROOT_DIRECTORY = "D:\\test"
+ROOT_DIRECTORY = os.path.normpath("D:\\test\\identities_0")
+
+
+# Paths to directories that contains thumbnails
+
+THUMBNAILS_DIRECTORIES = [
+    os.path.split(ROOT_DIRECTORY)[-1] + "_100",
+    os.path.split(ROOT_DIRECTORY)[-1] + "_200",
+]
 
 
 # Password validation
@@ -134,5 +142,5 @@ LOGOUT_REDIRECT_URL = '/accounts/login'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
-MEDIA_ROOT = ROOT_DIRECTORY
+MEDIA_ROOT = "".join(os.path.split(ROOT_DIRECTORY)[:-1])
 MEDIA_URL = '/media/'
