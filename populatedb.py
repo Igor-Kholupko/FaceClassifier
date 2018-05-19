@@ -7,7 +7,7 @@ def populate_db(root_directory=None):
     if root_directory is None:
         sys.stdout.write("You must set ROOT_DIRECTORY variable in settings file.\n")
         sys.exit(0)
-    from directories.models import (
+    from workspace.models import (
         Directory, RootDirectory, DirectoryItem,
     )
     root_directory = RootDirectory(path=os.path.normpath(root_directory))
