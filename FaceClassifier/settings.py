@@ -25,7 +25,7 @@ SECRET_KEY = 'x7s5pos*@$1^$8&vi7)3#f-0torzy(awk(@@l=pm15&nk!w_(#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1","127.0.0.2"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -90,7 +90,15 @@ DATABASES = {
 # Path to directory which content will be imported
 # to directories DB at 'django-admin --importdirs' command.
 
-ROOT_DIRECTORY = "D:\\test"
+ROOT_DIRECTORY = os.path.normpath("D:\\test\\identities_0")
+
+
+# Paths to directories that contains thumbnails
+
+THUMBNAILS_DIRECTORIES = [
+    os.path.split(ROOT_DIRECTORY)[-1] + "_100",
+    os.path.split(ROOT_DIRECTORY)[-1] + "_200",
+]
 
 
 # Password validation
@@ -126,12 +134,12 @@ USE_L10N = True
 USE_TZ = True
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
-LOGIN_REDIRECT_URL = '/workspace'
+LOGIN_REDIRECT_URL = '/workspace/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-MEDIA_ROOT = ROOT_DIRECTORY
+MEDIA_ROOT = "".join(os.path.split(ROOT_DIRECTORY)[:-1])
 MEDIA_URL = '/media/'
