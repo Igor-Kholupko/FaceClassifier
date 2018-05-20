@@ -46,11 +46,14 @@
             </div>
         </nav>
 
+        <form method="post" action="">
+        {% csrf_token %}
         <div class="normalPadding">
-            {% for main_form in main_forms %}
+            {% for dir_form in main_form.dir_forms %}
             <div class="container gallery-container">
                 <div class="tz-gallery">
-                    <p class="page-description text-center">kek</p>
+                    <p class="page-description text-center">Name of directory</p>
+                    {% for item_form in dir_form.item_forms %}
                     <div class="row">
                         <div class="col-sm-4 col-md-2">
                             <a class="lightbox" href="{% static 'images/park.jpg' %}">
@@ -61,7 +64,7 @@
                             </a>
                         </div>
                     </div>
-                <form>
+                    {% endfor %}
                 <div class="funkyradio" id="funkyradio2">
                     <div class="row">
                         <div class="col-sm-4 col-md-2">
@@ -106,27 +109,20 @@
                         </div>
                     </div>
                 </div>
-                </form>
+
                     <hr>
                 <div class="row">
                     <div class="col-md-12 text-center">
                     <form class="form-horizontal down">
-                         <input type="button" value="Next" class="btn btn-default" onclick="loginBut()"/>
-                         <script>
-                            function loginBut()
-                            {
-                                 window.location = "main.html"
-                            }
-                        </script>
+                         <input type="submit" value="Next" class="btn btn-default"/>
                     </form>
                    </div>
                 </div>
-
             </div>
         </div>
          {% endfor %}
         </div>
-
+        </form>
 
     <footer id="footer" class="dark-wrapper">
         <div class="container inner">
