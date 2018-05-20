@@ -47,7 +47,8 @@ class DirectoryAdmin(admin.ModelAdmin):
 
 class DirectoryItemAdmin(admin.ModelAdmin):
     using = 'directories'
-    list_display = ['name', 'dir_id', 'thumbnail_100x100', 'thumbnail_200x200']
+    # list_display = ['name', 'dir_id', 'thumbnail_100x100', 'thumbnail_200x200']
+    list_display = ['name', 'dir_id']
     exclude = []
 
     def save_model(self, request, obj, form, change):

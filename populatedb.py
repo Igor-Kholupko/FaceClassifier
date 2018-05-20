@@ -27,8 +27,5 @@ def populate_db(root_directory=None, thumb_directories=None):
         directory.save(using="directories")
         directory_content = os.listdir(root_directory.path + "\\" + directory.path)
         for j in directory_content:
-            directory_item = DirectoryItem(dir=directory, name=j, is_bad=False,
-                                           fullsize_image=thumb_directories[0] + "\\" + directory.path + "\\" + j,
-                                           thumbnail_100x100=root_directory.dir_100 + "\\" + directory.path + "\\" + j,
-                                           thumbnail_200x200=root_directory.dir_200 + "\\" + directory.path + "\\" + j)
+            directory_item = DirectoryItem(dir=directory, name=j, is_bad=False)
             directory_item.save(using="directories")
