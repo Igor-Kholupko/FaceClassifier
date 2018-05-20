@@ -1,5 +1,23 @@
 from django import forms
+from .models import (
+    Directory, DirectoryItem,
+)
 
 
 class MainForm(forms.Form):
-    list_of_tuples = list()
+    dir_forms = list()
+
+
+class DirectoryForm(forms.ModelForm):
+    item_forms = list()
+
+    class Meta:
+        model = Directory
+        fields = []
+
+
+class DirectoryItemForm(forms.ModelForm):
+
+    class Meta:
+        model = DirectoryItem
+        fields = ["is_bad"]

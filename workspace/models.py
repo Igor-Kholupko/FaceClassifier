@@ -32,7 +32,7 @@ class Directory(models.Model):
 class DirectoryItem(models.Model):
     dir = models.ForeignKey(Directory, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
-    is_bad = models.BooleanField()
+    is_bad = models.BooleanField(default=False)
     # fullsize_image = models.ImageField(upload_to="", default=None)
     # thumbnail_100x100 = models.ImageField(upload_to="", default=None)
     # thumbnail_200x200 = models.ImageField(upload_to="", default=None)
