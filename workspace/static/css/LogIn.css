@@ -1,5 +1,6 @@
-.login-container {
-	padding-bottom: 293px;
+.normalPadding {
+    padding-top: 30px;
+    padding-bottom: 249px;
 }
 
 .form-horizontal{
@@ -104,6 +105,7 @@
 	 padding-top: 5px;
 	 text-transform: capitalize;
 }
+
 .form-horizontal .btn{
 	 float: right;
 	 font-size: 14px;

@@ -42,17 +42,6 @@
                      <i class="fa fa-lock"></i>
 				 </div>
                 <div class="form-group">
-					 <div class="main-checkbox">
-						 <input type="checkbox" value="none" id="checkbox1" name="check"/>
-						 <label for="checkbox1"></label>
-					 </div>
-                    <span class="text">Remember me</span>
-                     <input type="submit" value="Log In" class="btn btn-default" onclick="loginBut()"/>
-					 <input type="hidden" name="next" value="{{ next }}" />
-                </div>
-
-			 </form>
-             <div>
                     {% if form.errors %}
                          <p>Your username and password didn't match. Please try again.</p>
                     {% endif %}
@@ -64,7 +53,11 @@
                         <p>Please login to see this page.</p>
                         {% endif %}
                     {% endif %}
-             </div>
+                     <input type="submit" value="Log In" class="btn btn-default" onclick="loginBut()"/>
+					 <input type="hidden" name="next" value="{{ next }}" />
+                </div>
+
+			 </form>
 		 </div>
 		 </div><!-- /.row -->
 	</div><!-- /.container -->
