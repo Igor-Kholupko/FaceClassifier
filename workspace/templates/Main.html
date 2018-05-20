@@ -34,7 +34,7 @@
 		    <div class="collapse navbar-collapse" id="navbarNav">
 		        <ul class="navbar-nav">
   		            <li class="nav-item">
-                        <a class="navbar-brand" href="{% url 'workspace/' %}">Folder viewer</a>
+                        <a class="navbar-brand" href="#">Folder viewer</a>
 		            </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Done</a>
@@ -47,9 +47,10 @@
         </nav>
 
         <div class="normalPadding">
+            {% for main_form in main_forms %}
             <div class="container gallery-container">
                 <div class="tz-gallery">
-                    <p class="page-description text-center">{{ main_form }}</p>
+                    <p class="page-description text-center">kek</p>
                     <div class="row">
                         <div class="col-sm-4 col-md-2">
                             <a class="lightbox" href="{% static 'images/park.jpg' %}">
@@ -123,6 +124,7 @@
 
             </div>
         </div>
+         {% endfor %}
         </div>
 
 
