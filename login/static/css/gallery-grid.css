@@ -17,10 +17,12 @@
     margin: 0px auto;
     color: #888;
     font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 6px;
 }
 
 .tz-gallery {
-    padding: 5px;
+    padding: 10px;
 }
 
 .tz-gallery .lightbox img {
