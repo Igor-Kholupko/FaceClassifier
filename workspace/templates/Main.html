@@ -15,6 +15,7 @@
 	<script src="{% static 'js/gallery-grid.js' %}"></script>
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/savedata.js' %}"></script>
 
     <script>
 		$(document).ready(function(e){
@@ -45,94 +46,87 @@
                 </ul>
             </div>
         </nav>
-
         <form method="post" action="#">
         {% csrf_token %}
-        <div class="normalPadding">
-            <div class="container gallery-container">
-                {% for dir_form in main_form.dir_forms %}
-                <div class="tz-gallery">
-                    <p class="page-description text-center">{{ dir_form.data.path }}</p>
-
-                    <div class="row">
-                        {% for item_form in dir_form.item_forms %}
-                        <div class="col-sm-4 col-md-2">
-                            <a class="lightbox" href="/media/identities_0/{{ dir_form.data.path }}/{{ item_form.data.name }}">
-                                <label>
-                                    <img src="/media/identities_0_100/{{ dir_form.data.path }}/{{ item_form.data.name }}" class="img-responsive img-thumbnail checked" alt="{{ item_form.data.name }}">
-                                    <input type="checkbox" name="{{ dir_form.data.id }}" value="{{ item_form.data.id }}" class="hidden" autocomplete="off" />
-                                </label>
-                            </a>
+            <div class="normalPadding">
+                <div class="container gallery-container">
+                    {% for dir_form in main_form.dir_forms %}
+                    <div class="tz-gallery">
+                        <p class="page-description text-center">{{ dir_form.data.path }}</p>
+                        <div class="row">
+                            {% for item_form in dir_form.item_forms %}
+                            <div class="col-sm-4 col-md-2">
+                                <a class="lightbox" href="/media/identities_0/{{ dir_form.data.path }}/{{ item_form.data.name }}">
+                                    <label>
+                                        <img src="/media/identities_0_100/{{ dir_form.data.path }}/{{ item_form.data.name }}" name="checkbox{{ item_form.data.id }}" class="img-responsive img-thumbnail checked" alt="{{ item_form.data.name }}">
+                                        <input type="checkbox" name="{{ dir_form.data.id }}" id="checkbox{{ item_form.data.id }}" value="{{ item_form.data.id }}" class="hidden" autocomplete="off" onclick="SetCheckBox(this);" />
+                                    </label>
+                                </a>
+                            </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
+                    <div class="funkyradio" id="funkyradio2">
+                        <div class="row">
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="Normal" id="{{ dir_form.data.id }}_Normal" onchange="SetData(this);"/>
+                                    <label for="{{ dir_form.data.id }}_Normal">Normal</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="Label" id="{{ dir_form.data.id }}_Label" onchange="SetData(this);"/>
+                                    <label for="{{ dir_form.data.id }}_Label">Label</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="Extra" id="{{ dir_form.data.id }}_Extra" onchange="SetData(this);"/>
+                                    <label for="{{ dir_form.data.id }}_Extra">Extra</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="Blurry" id="{{ dir_form.data.id }}_Blurry" onchange="SetData(this);"/>
+                                    <label for="{{ dir_form.data.id }}_Blurry">Blurry</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="Multiple" id="{{ dir_form.data.id }}_Multiple" onchange="SetData(this);"/>
+                                    <label for="{{ dir_form.data.id }}_Multiple">Multiple</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="Nonperson" id="{{ dir_form.data.id }}_Nonperson" onchange="SetData(this);"/>
+                                    <label for="{{ dir_form.data.id }}_Nonperson">Nonperson</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-                <div class="funkyradio" id="funkyradio2">
-                    <div class="row">
-                        <div class="col-sm-4 col-md-2">
-                            <div class="funkyradio-success">
-                                <input type="radio" name="{{ dir_form.data.path }}"
-                                       value="Normal" id="{{ dir_form.data.id }}_Normal" />
-                                <label for="{{ dir_form.data.id }}_Normal">Normal</label>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4 col-md-2">
-                            <div class="funkyradio-success">
-                                <input type="radio" name="{{ dir_form.data.path }}"
-                                       value="Label" id="{{ dir_form.data.id }}_Label" />
-                                <label for="{{ dir_form.data.id }}_Label">Label</label>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4 col-md-2">
-                            <div class="funkyradio-success">
-                                <input type="radio" name="{{ dir_form.data.path }}"
-                                       value="Extra" id="{{ dir_form.data.id }}_Extra" />
-                                <label for="{{ dir_form.data.id }}_Extra">Extra</label>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4 col-md-2">
-                            <div class="funkyradio-success">
-                                <input type="radio" name="{{ dir_form.data.path }}"
-                                       value="Blurry" id="{{ dir_form.data.id }}_Blurry" />
-                                <label for="{{ dir_form.data.id }}_Blurry">Blurry</label>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4 col-md-2">
-                            <div class="funkyradio-success">
-                                <input type="radio" name="{{ dir_form.data.path }}"
-                                       value="Multiple" id="{{ dir_form.data.id }}_Multiple" />
-                                <label for="{{ dir_form.data.id }}_Multiple">Multiple</label>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 col-md-2">
-                            <div class="funkyradio-success">
-                                <input type="radio" name="{{ dir_form.data.path }}"
-                                       value="Nonperson" id="{{ dir_form.data.id }}_Nonperson" />
-                                <label for="{{ dir_form.data.id }}_Nonperson">Nonperson</label>
-                            </div>
-                        </div>
+                    <hr>
+                </div>
+                    {% endfor %}
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <form class="form-horizontal down">
+                             <input type="submit" value="Next" class="btn btn-default"/>
+                        </form>
                     </div>
                 </div>
-                <hr>
-
             </div>
-                {% endfor %}
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <form class="form-horizontal down">
-                         <input type="submit" value="Next" class="btn btn-default"/>
-                    </form>
-                </div>
-        </div>
-        </div>
             </div>
-        </div>
-
-        </div>
         </form>
 
     <footer id="footer" class="dark-wrapper">
