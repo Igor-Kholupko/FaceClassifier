@@ -13,6 +13,6 @@ def workspace(request):
         items = DirectoryItem.objects.using('directories').filter(dir_id=i)
         id_list = list()
         for j in items:
-            id_list.append((j.pk, j.thumbnail_100x100, j.thumbnail_200x200))
-        main_forms.list_of_tuples.append((i.id, id_list))
+            id_list.append((j.pk, j.fullsize_image, j.thumbnail_100x100, j.thumbnail_200x200))
+        main_forms.list_of_tuples.append((i.id, i.path, id_list))
     return render(request, 'Main.html', locals())
