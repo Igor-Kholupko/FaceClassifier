@@ -49,89 +49,90 @@
         <form method="post" action="">
         {% csrf_token %}
         <div class="normalPadding">
-            {% for dir_form in main_form.dir_forms %}
             <div class="container gallery-container">
+                {% for dir_form in main_form.dir_forms %}
                 <div class="tz-gallery">
-                    <p class="page-description text-center">Name of directory</p>
-                    {% for item_form in dir_form.item_forms %}
+                    <p class="page-description text-center">{{ dir_form.data.path }}</p>
+
                     <div class="row">
+                        {% for item_form in dir_form.item_forms %}
                         <div class="col-sm-4 col-md-2">
-                            <a class="lightbox" href="{% static 'images/park.jpg' %}">
+                            <a class="lightbox" href="/media/identities_0/{{ dir_form.data.path }}/{{ item_form.data.name }}">
                                 <label>
-                                    <img src="{% static 'images/park.jpg' %}" class="img-responsive img-thumbnail checked" alt="Park">
-                                    <input type="checkbox" name="img1" value="num1" class="hidden" autocomplete="off" />
+                                    <img src="/media/identities_0_100/{{ dir_form.data.path }}/{{ item_form.data.name }}" class="img-responsive img-thumbnail checked" alt="{{ item_form.data.name }}">
+                                    <input type="checkbox" name="{{ dir_form.data.id }}" value="{{ item_form.data.id }}" class="hidden" autocomplete="off" />
                                 </label>
                             </a>
                         </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
+
                 <div class="funkyradio" id="funkyradio2">
                     <div class="row">
                         <div class="col-sm-4 col-md-2">
                             <div class="funkyradio-success">
-                                <input type="radio" name="radio" id="radio1" />
-                                <label for="radio1">Normal</label>
+                                <input type="radio" name="{{ dir_form.data.path }}"
+                                       value="Normal" id="{{ dir_form.data.id }}_Normal" />
+                                <label for="{{ dir_form.data.id }}_Normal">Normal</label>
                             </div>
                         </div>
 
                         <div class="col-sm-4 col-md-2">
                             <div class="funkyradio-success">
-                                <input type="radio" name="radio" id="radio2" />
-                                <label for="radio2">Label</label>
+                                <input type="radio" name="{{ dir_form.data.path }}"
+                                       value="Normal" id="{{ dir_form.data.id }}_Label" />
+                                <label for="{{ dir_form.data.id }}_Label">Label</label>
                             </div>
                         </div>
 
                         <div class="col-sm-4 col-md-2">
                             <div class="funkyradio-success">
-                                <input type="radio" name="radio" id="radio3" />
-                                <label for="radio3">Extra</label>
+                                <input type="radio" name="{{ dir_form.data.path }}"
+                                       value="Normal" id="{{ dir_form.data.id }}_Extra" />
+                                <label for="{{ dir_form.data.id }}_Extra">Extra</label>
                             </div>
                         </div>
 
                         <div class="col-sm-4 col-md-2">
                             <div class="funkyradio-success">
-                                <input type="radio" name="radio" id="radio4" />
-                                <label for="radio4">Blurry</label>
+                                <input type="radio" name="{{ dir_form.data.path }}"
+                                       value="Normal" id="{{ dir_form.data.id }}_Blurry" />
+                                <label for="{{ dir_form.data.id }}_Blurry">Blurry</label>
                             </div>
                         </div>
 
                         <div class="col-sm-4 col-md-2">
                             <div class="funkyradio-success">
-                                <input type="radio" name="radio" id="radio5" />
-                                <label for="radio5">Multiple</label>
+                                <input type="radio" name="{{ dir_form.data.path }}"
+                                       value="Normal" id="{{ dir_form.data.id }}_Multiple" />
+                                <label for="{{ dir_form.data.id }}_Multiple">Multiple</label>
                             </div>
                         </div>
                         <div class="col-sm-4 col-md-2">
                             <div class="funkyradio-success">
-                                <input type="radio" name="radio" id="radio6" />
-                                <label for="radio6">Nonperson</label>
+                                <input type="radio" name="{{ dir_form.data.path }}"
+                                       value="Normal" id="{{ dir_form.data.id }}_Nonperson" />
+                                <label for="{{ dir_form.data.id }}_Nonperson">Nonperson</label>
                             </div>
                         </div>
                     </div>
                 </div>
-<<<<<<< HEAD
                 <hr>
-            {% endfor %}
-=======
 
             </div>
-        </div>
-         {% endfor %}
-                    <hr>
->>>>>>> f478bdf0c631ab2c5960d4b12e85dd447c41e82b
-                <div class="row">
-                    <div class="col-md-12 text-center">
+                {% endfor %}
+            <div class="row">
+                <div class="col-md-12 text-center">
                     <form class="form-horizontal down">
                          <input type="submit" value="Next" class="btn btn-default"/>
                     </form>
-                   </div>
                 </div>
-<<<<<<< HEAD
+        </div>
+            <hr>
+        </div>
             </div>
         </div>
 
-=======
->>>>>>> f478bdf0c631ab2c5960d4b12e85dd447c41e82b
         </div>
         </form>
 
