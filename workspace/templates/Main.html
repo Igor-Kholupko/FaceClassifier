@@ -46,7 +46,7 @@
             </div>
         </nav>
 
-        <form method="post" action="">
+        <form method="post" action="#">
         {% csrf_token %}
         <div class="normalPadding">
             <div class="container gallery-container">
@@ -80,7 +80,7 @@
                         <div class="col-sm-4 col-md-2">
                             <div class="funkyradio-success">
                                 <input type="radio" name="{{ dir_form.data.path }}"
-                                       value="Normal" id="{{ dir_form.data.id }}_Label" />
+                                       value="Label" id="{{ dir_form.data.id }}_Label" />
                                 <label for="{{ dir_form.data.id }}_Label">Label</label>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                         <div class="col-sm-4 col-md-2">
                             <div class="funkyradio-success">
                                 <input type="radio" name="{{ dir_form.data.path }}"
-                                       value="Normal" id="{{ dir_form.data.id }}_Blurry" />
+                                       value="Blurry" id="{{ dir_form.data.id }}_Blurry" />
                                 <label for="{{ dir_form.data.id }}_Blurry">Blurry</label>
                             </div>
                         </div>
@@ -104,14 +104,14 @@
                         <div class="col-sm-4 col-md-2">
                             <div class="funkyradio-success">
                                 <input type="radio" name="{{ dir_form.data.path }}"
-                                       value="Normal" id="{{ dir_form.data.id }}_Multiple" />
+                                       value="Multiple" id="{{ dir_form.data.id }}_Multiple" />
                                 <label for="{{ dir_form.data.id }}_Multiple">Multiple</label>
                             </div>
                         </div>
                         <div class="col-sm-4 col-md-2">
                             <div class="funkyradio-success">
                                 <input type="radio" name="{{ dir_form.data.path }}"
-                                       value="Normal" id="{{ dir_form.data.id }}_Nonperson" />
+                                       value="Nonperson" id="{{ dir_form.data.id }}_Nonperson" />
                                 <label for="{{ dir_form.data.id }}_Nonperson">Nonperson</label>
                             </div>
                         </div>
