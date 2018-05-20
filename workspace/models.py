@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import validate_comma_separated_integer_list
 
 
 class RootDirectory(models.Model):
@@ -17,7 +18,7 @@ class RootDirectory(models.Model):
 class Directory(models.Model):
     root_dir = models.ForeignKey(RootDirectory, on_delete=models.CASCADE)
     path = models.CharField(max_length=256)
-    is_busy = models.BooleanField(default=False)
+    is_busy = models.CharField(validators=[validate_comma_separated_integer_list], max_length=256, default='0')
     classifications_amount = models.PositiveIntegerField(default=0)
     directory_class = models.TextField(default="")
 
