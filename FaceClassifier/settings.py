@@ -97,6 +97,7 @@ ROOT_DIRECTORY = os.path.normpath("D:\\test\\identities_0")
 # Paths to directories that contains thumbnails
 
 THUMBNAILS_DIRECTORIES = [
+    os.path.split(ROOT_DIRECTORY)[-1],
     os.path.split(ROOT_DIRECTORY)[-1] + "_100",
     os.path.split(ROOT_DIRECTORY)[-1] + "_200",
 ]
