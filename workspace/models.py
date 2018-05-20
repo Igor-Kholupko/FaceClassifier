@@ -17,6 +17,7 @@ class RootDirectory(models.Model):
 class Directory(models.Model):
     root_dir = models.ForeignKey(RootDirectory, on_delete=models.CASCADE)
     path = models.CharField(max_length=256)
+    is_busy = models.BooleanField(default=False)
     classifications_amount = models.PositiveIntegerField(default=0)
     directory_class = models.TextField(default="")
 
