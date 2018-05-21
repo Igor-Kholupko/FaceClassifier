@@ -59,7 +59,7 @@
                                 <a class="lightbox" href="/media/identities_0/{{ dir_form.data.path }}/{{ item_form.data.name }}">
                                     <label>
                                         <img src="/media/identities_0_100/{{ dir_form.data.path }}/{{ item_form.data.name }}" name="checkbox{{ item_form.data.id }}" class="img-responsive img-thumbnail checked" alt="{{ item_form.data.name }}">
-                                        <input type="checkbox" name="{{ dir_form.data.id }}" id="checkbox{{ item_form.data.id }}" value="{{ item_form.data.id }}" class="hidden" autocomplete="off" onclick="SetCheckBox(this);" />
+                                        <input type="checkbox" name="checkbox" id="checkbox{{ item_form.data.id }}" value="{{ item_form.data.id }}" class="hidden" autocomplete="off" onclick="SetCheckBox(this);" />
                                     </label>
                                 </a>
                             </div>
@@ -69,47 +69,47 @@
                         <div class="row">
                             <div class="col-sm-4 col-md-2">
                                 <div class="funkyradio-success">
-                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
-                                           value="Normal" id="{{ dir_form.data.id }}_Normal" onchange="SetData(this);"/>
+                                    <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="{{ dir_form.data.id }}_Normal" id="{{ dir_form.data.id }}_Normal" onchange="SetData(this);"/>
                                     <label for="{{ dir_form.data.id }}_Normal">Normal</label>
                                 </div>
                             </div>
 
                             <div class="col-sm-4 col-md-2">
                                 <div class="funkyradio-success">
-                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
-                                           value="Label" id="{{ dir_form.data.id }}_Label" onchange="SetData(this);"/>
+                                    <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="{{ dir_form.data.id }}_Label" id="{{ dir_form.data.id }}_Label" onchange="SetData(this);"/>
                                     <label for="{{ dir_form.data.id }}_Label">Label</label>
                                 </div>
                             </div>
 
                             <div class="col-sm-4 col-md-2">
                                 <div class="funkyradio-success">
-                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
-                                           value="Extra" id="{{ dir_form.data.id }}_Extra" onchange="SetData(this);"/>
+                                    <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="{{ dir_form.data.id }}_Extra" id="{{ dir_form.data.id }}_Extra" onchange="SetData(this);"/>
                                     <label for="{{ dir_form.data.id }}_Extra">Extra</label>
                                 </div>
                             </div>
 
                             <div class="col-sm-4 col-md-2">
                                 <div class="funkyradio-success">
-                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
-                                           value="Blurry" id="{{ dir_form.data.id }}_Blurry" onchange="SetData(this);"/>
+                                    <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="{{ dir_form.data.id }}_Blurry" id="{{ dir_form.data.id }}_Blurry" onchange="SetData(this);"/>
                                     <label for="{{ dir_form.data.id }}_Blurry">Blurry</label>
                                 </div>
                             </div>
 
                             <div class="col-sm-4 col-md-2">
                                 <div class="funkyradio-success">
-                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
-                                           value="Multiple" id="{{ dir_form.data.id }}_Multiple" onchange="SetData(this);"/>
+                                    <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="{{ dir_form.data.id }}_Multiple" id="{{ dir_form.data.id }}_Multiple" onchange="SetData(this);"/>
                                     <label for="{{ dir_form.data.id }}_Multiple">Multiple</label>
                                 </div>
                             </div>
                             <div class="col-sm-4 col-md-2">
                                 <div class="funkyradio-success">
-                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
-                                           value="Nonperson" id="{{ dir_form.data.id }}_Nonperson" onchange="SetData(this);"/>
+                                    <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="{{ dir_form.data.id }}_Nonperson" id="{{ dir_form.data.id }}_Nonperson" onchange="SetData(this);"/>
                                     <label for="{{ dir_form.data.id }}_Nonperson">Nonperson</label>
                                 </div>
                             </div>

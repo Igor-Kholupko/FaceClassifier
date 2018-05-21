@@ -6,7 +6,8 @@ from .models import (
 
 class MainForm(forms.Form):
     dir_forms = list()
-    user_id = int
+    user_id = list()
+
 
 class DirectoryForm(forms.ModelForm):
     item_forms = list()
