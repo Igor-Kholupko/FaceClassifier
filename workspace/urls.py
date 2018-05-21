@@ -1,8 +1,9 @@
 from django.urls import path
-from . import views
+from workspace import views
 
 urlpatterns = [
     path('', views.workspace, name='workspace'),
+    path('statistics/', views.statistics, name='statistics'),
 ]
 
 
