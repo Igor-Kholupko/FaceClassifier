@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<title>{% block title %}Sort Photos{% endblock %}</title>
+    {% load static %}
+	<link rel="stylesheet" href="{% static 'css/bootstrap-responsive.css' %}">
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/gallery-grid.css' %}">
+    <link rel="stylesheet" href="{% static 'css/baguetteBox.min.css' %}">
+
+	<script src="{% static 'js/gallery-grid.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/savedata.js' %}"></script>
+
+    <script>
+		$(document).ready(function(e){
+		$("img.checked").click(function(){
+		$(this).toggleClass("checking");
+		});
+		});
+	</script>
+</head>
+
+{% block content %}
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		        <span class="navbar-toggler-icon"></span>
+		    </button>
+		    <div class="collapse navbar-collapse" id="navbarNav">
+		        <ul class="navbar-nav">
+  		            <li class="nav-item">
+                        <a class="navbar-brand" href="#">Folder viewer</a>
+		            </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Done</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Exit</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <form method="post" action="#">
+        {% csrf_token %}
+            <div class="normalPadding">
+                <div class="container gallery-container">
+                    {% for dir_form in main_form.dir_forms %}
+                    <div class="tz-gallery">
+                        <p class="page-description text-center">{{ dir_form.data.path }}</p>
+                        <div class="row">
+                            {% for item_form in dir_form.item_forms %}
+                            <div class="col-sm-4 col-md-2">
+                                <a class="lightbox" href="/media/identities_0/{{ dir_form.data.path }}/{{ item_form.data.name }}">
+                                    <label>
+                                        <img src="/media/identities_0_100/{{ dir_form.data.path }}/{{ item_form.data.name }}" name="checkbox{{ item_form.data.id }}" class="img-responsive img-thumbnail checked" alt="{{ item_form.data.name }}">
+                                        <input type="checkbox" name="{{ dir_form.data.id }}" id="checkbox{{ item_form.data.id }}" value="{{ item_form.data.id }}" class="hidden" autocomplete="off" onclick="SetCheckBox(this);" />
+                                    </label>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    <div class="funkyradio" id="funkyradio2">
+                        <div class="row">
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="Normal" id="{{ dir_form.data.id }}_Normal" onchange="SetData(this);"/>
+                                    <label for="{{ dir_form.data.id }}_Normal">Normal</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="Label" id="{{ dir_form.data.id }}_Label" onchange="SetData(this);"/>
+                                    <label for="{{ dir_form.data.id }}_Label">Label</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="Extra" id="{{ dir_form.data.id }}_Extra" onchange="SetData(this);"/>
+                                    <label for="{{ dir_form.data.id }}_Extra">Extra</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="Blurry" id="{{ dir_form.data.id }}_Blurry" onchange="SetData(this);"/>
+                                    <label for="{{ dir_form.data.id }}_Blurry">Blurry</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="Multiple" id="{{ dir_form.data.id }}_Multiple" onchange="SetData(this);"/>
+                                    <label for="{{ dir_form.data.id }}_Multiple">Multiple</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="{{ dir_form.data.path }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="Nonperson" id="{{ dir_form.data.id }}_Nonperson" onchange="SetData(this);"/>
+                                    <label for="{{ dir_form.data.id }}_Nonperson">Nonperson</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                    {% endfor %}
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <form class="form-horizontal down">
+                             <input type="submit" value="Next" class="btn btn-default"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </form>
+
+    <footer id="footer" class="dark-wrapper">
+        <div class="container inner">
+            <div class="row">
+                <div class="col-sm-4">
+                    2018
+                    <br/>Theme By <div class="themeBy">Bsuir-EVM</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+        <script>
+            baguetteBox.run('.tz-gallery');
+        </script>
+    </body>
+    {% endblock %}
+</html>
