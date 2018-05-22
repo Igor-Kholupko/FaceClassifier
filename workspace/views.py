@@ -25,7 +25,7 @@ MAX_DIRECTORIES = 10
 def workspace(request):
     if request.method == "POST":
         d = dict(request.POST)
-        for i in range(1, MAX_DIRECTORIES):
+        for i in range(1, MAX_DIRECTORIES+1):
             try:
                 split = re.split("[_\s]", d[("radio_%d" % i)][0])
                 i = Directory.objects.using('directories').get(pk=int(split[0]))
