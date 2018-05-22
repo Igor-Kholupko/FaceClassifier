@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'x7s5pos*@$1^$8&vi7)3#f-0torzy(awk(@@l=pm15&nk!w_(#'
+SECRET_KEY = '!!-nuns@77*6=9+j86y^&=&^d7@xt9#em=qnqbwmm)imc58kld'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -38,9 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
-    'login',
+    'users',
     'workspace',
-    'general_statistics',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +57,8 @@ ROOT_URLCONF = 'FaceClassifier.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        ,
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -88,12 +88,7 @@ DATABASES = {
     }
 }
 
-
-# Path to directory which content will be imported
-# to directories DB at 'django-admin --importdirs' command.
-
 ROOT_DIRECTORY = os.path.normpath("D:\\test\\identities_0")
-
 
 # Paths to directories that contains thumbnails
 
@@ -102,6 +97,12 @@ THUMBNAILS_DIRECTORIES = [
     os.path.split(ROOT_DIRECTORY)[-1] + "_100",
 ]
 
+AUTH_USER_MODEL = 'users.CustomUser'
+
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+LOGIN_REDIRECT_URL = '/workspace'
+
+LOGOUT_REDIRECT_URL = '/accounts/login'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -135,22 +136,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Redirect to home URL after login (Default redirects to /accounts/profile/)
-LOGIN_REDIRECT_URL = '/workspace'
-LOGOUT_REDIRECT_URL = '/accounts/login'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 STATIC_URL = '/static/'
+
 MEDIA_ROOT = "".join(os.path.split(ROOT_DIRECTORY)[:-1])
+
 MEDIA_URL = '/media/'
-
-
-# Number of seconds of inactivity before a user is marked offline
-USER_ONLINE_TIMEOUT = 300
-
-# Number of seconds that we will keep track of inactive users for before
-# their last seen is removed from the cache
-USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7

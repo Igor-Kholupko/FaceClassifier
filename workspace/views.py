@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from users.models import CustomUser
 from .forms import (
     MainForm, DirectoryForm, DirectoryItemForm
 )
@@ -67,7 +68,7 @@ def workspace(request):
         lock.release()
     dictionary = dict()
     dictionary.update(main_form=locals()['main_form'])
-    return render(request, 'Main.html', dictionary)
+    return render(request, 'main.html', dictionary)
 
 
 @login_required(login_url='/accounts/login/')
@@ -75,3 +76,10 @@ def statistics(request):
     current_user = request.user
     current_session_key = request.session.session_key
     return render(request, 'user-stat.html', locals())
+
+
+@login_required(login_url='/accounts/login/')
+def general_statistics(request):
+    users = CustomUser.objects.all()
+    return render(request, 'general-stat-log.html', locals())
+
