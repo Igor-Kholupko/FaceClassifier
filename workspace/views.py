@@ -1,8 +1,9 @@
 from datetime import timedelta
 from django.utils import timezone
-from users.models import Profile
+from users.models import CustomUser
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from users.models import CustomUser
 from .forms import (
     MainForm, DirectoryForm, DirectoryItemForm
 )
@@ -32,7 +33,6 @@ MAX_DIRECTORIES = 10
 
 @login_required(login_url='/accounts/login/')
 def workspace(request):
-    Profile.update_user_activity(request.user)
     if request.method == "POST":
         d = dict(request.POST)
         for i in range(1, MAX_DIRECTORIES+1):
@@ -85,15 +85,15 @@ def workspace(request):
 
 @login_required(login_url='/accounts/login/')
 def statistics(request):
-    Profile.update_user_activity(request.user)
     current_user = request.user
+    current_session_key = request.session.session_key
     return render(request, 'user-stat.html', locals())
 
 
 @login_required(login_url='/accounts/login/')
 def general_statistics(request):
-    Profile.update_user_activity(request.user)
-    users = Profile.objects.select_related('user')
+    CustomUser.update_user_activity(request.user)
+    users = CustomUser.objects.all()
     time_delta = timedelta(minutes=15)
     starting_time = timezone.now() - time_delta
     return render(request, 'general-stat-log.html', locals())
