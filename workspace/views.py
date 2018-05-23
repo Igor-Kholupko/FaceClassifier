@@ -4,7 +4,7 @@ from .forms import (
     MainForm, DirectoryForm, DirectoryItemForm
 )
 from .models import (
-    Directory, DirectoryItem
+    Directory, DirectoryItem, ClassifiedByRelation
 )
 from threading import Lock
 from _thread import start_new_thread
@@ -39,6 +39,8 @@ def workspace(request):
                 i.is_busy = '0'
                 i.directory_class = split[1]
                 i.save(using='directories')
+                classified_by = ClassifiedByRelation(dir=i, user_id=request.user.id)
+                classified_by.save(using='directories')
             except KeyError:
                 break
         try:
