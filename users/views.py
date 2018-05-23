@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from .models import CustomUser
+from .models import Profile
 
 
 def login(request):
@@ -7,5 +7,6 @@ def login(request):
 
 
 def general_statistics(request):
-    users = CustomUser.objects.all()
+    users = Profile.objects.select_related('user')
     return render(request, 'general-stat.html', locals())
+

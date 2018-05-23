@@ -1,5 +1,5 @@
 from django.utils.deprecation import MiddlewareMixin
-from .models import CustomUser
+from .models import Profile
 
 
 class OnlineNowMiddleware(MiddlewareMixin):
@@ -9,4 +9,4 @@ class OnlineNowMiddleware(MiddlewareMixin):
         if not user.is_authenticated:
             return
 
-        CustomUser.update_user_activity(user)
+        Profile.update_user_activity(user)

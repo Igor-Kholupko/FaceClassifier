@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'widget_tweaks',
     'users',
     'workspace',
+    'widget-tweaks',
 ]
 
 MIDDLEWARE = [
@@ -93,16 +93,6 @@ DATABASES = {
 
 ROOT_DIRECTORY = os.path.normpath("D:\\test\\identities_0")
 
-# Paths to directories that contains thumbnails
-
-THUMBNAILS_DIRECTORIES = [
-    os.path.split(ROOT_DIRECTORY)[-1],
-    os.path.split(ROOT_DIRECTORY)[-1] + "_100",
-]
-
-AUTH_USER_MODEL = 'users.CustomUser'
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
@@ -121,6 +111,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+
+LOGIN_REDIRECT_URL = '/workspace'
+
+LOGOUT_REDIRECT_URL = '/accounts/login'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -136,12 +132,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Redirect to home URL after login (Default redirects to /accounts/profile/)
-
-LOGIN_REDIRECT_URL = '/workspace'
-LOGOUT_REDIRECT_URL = '/accounts/login'
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
@@ -153,16 +143,6 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = "".join(os.path.split(ROOT_DIRECTORY)[:-1])
 
 MEDIA_URL = '/media/'
-# Number of seconds of inactivity before a user is marked offline
-
-USER_ONLINE_TIMEOUT = 300
-
-
-# Number of seconds that we will keep track of inactive users for before
-# their last seen is removed from the cache
-
-USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7
-
 
 # Cool time in seconds to start collecting all busy directories
 # and releasing it
