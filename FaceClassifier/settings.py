@@ -93,6 +93,15 @@ DATABASES = {
 
 ROOT_DIRECTORY = os.path.normpath("D:\\test\\identities_0")
 
+# Paths to directories that contains thumbnails
+
+THUMBNAILS_DIRECTORIES = [
+    os.path.split(ROOT_DIRECTORY)[-1],
+    os.path.split(ROOT_DIRECTORY)[-1] + "_100",
+]
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 

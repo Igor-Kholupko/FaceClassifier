@@ -64,7 +64,7 @@
                         {% for user in users %}
 					    <tr class="well">
 					        <td>
-                                {% if user.last_activity < starting_time %}
+                                {% if user.last_activity > starting_time %}
                                     <i class="fa fa-user online"></i>
                                 {% else %}
                                     <i class="fa fa-user offline"></i>

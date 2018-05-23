@@ -92,8 +92,8 @@ def statistics(request):
 
 @login_required(login_url='/accounts/login/')
 def general_statistics(request):
-    CustomUser.update_user_activity(request.user)
+    CustomUser.update_user_activity(user=request.user)
     users = CustomUser.objects.all()
-    time_delta = timedelta(minutes=15)
+    time_delta = timedelta(minutes=1)
     starting_time = timezone.now() - time_delta
     return render(request, 'general-stat-log.html', locals())
