@@ -1,3 +1,6 @@
+from datetime import timedelta
+from django.utils import timezone
+from users.models import CustomUser
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from users.models import CustomUser
@@ -80,6 +83,9 @@ def statistics(request):
 
 @login_required(login_url='/accounts/login/')
 def general_statistics(request):
+    CustomUser.update_user_activity(request.user)
     users = CustomUser.objects.all()
+    time_delta = timedelta(minutes=15)
+    starting_time = timezone.now() - time_delta
     return render(request, 'general-stat-log.html', locals())
 

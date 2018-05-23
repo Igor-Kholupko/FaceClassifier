@@ -56,10 +56,7 @@
 					            <th>Online</th>
 					            <th>User</th>
                                 <th>Sorted folders</th>
-                                <th>Sorted images</th>
-                                <th>Marked images</th>
-                                <th>Time of work</th>
-                                <th>Productivity</th>
+                                <th>Last activity</th>
                                 <th>Quality of work</th>
 					        </tr>
 					    </thead>
@@ -67,19 +64,16 @@
                         {% for user in users %}
 					    <tr class="well">
 					        <td>
-                                {% if user.online %}
+                                {% if user.last_activity < starting_time %}
                                     <i class="fa fa-user online"></i>
                                 {% else %}
                                     <i class="fa fa-user offline"></i>
                                 {% endif %}
                             </td>
 					        <th scope="row"><a href="#">{{ user }}</a></th>
-					        <td>25</td>
-					        <td>63</td>
-					        <td>11</td>
-					        <td>1h 5min</td>
-					        <td>Well</td>
-					        <td>92%</td>
+					        <td>{{ user.number_of_sorted_folders }}</td>
+					        <td>{{ user.last_activity }}</td>
+					        <td>{{ user.quality_of_work }}</td>
 					    </tr>
                         {% endfor %}
 					  </tbody>

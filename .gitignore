@@ -1,5 +1,0 @@
-venv/*
-.idea/*
-*.pyc
-*.jpg
-*.sqlite3

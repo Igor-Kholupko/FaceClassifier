@@ -52,6 +52,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+MIDDLEWARE_CLASSES = (
+    'users.middleware.onlineNowMiddleware',
+)
+
 ROOT_URLCONF = 'FaceClassifier.urls'
 
 TEMPLATES = [
