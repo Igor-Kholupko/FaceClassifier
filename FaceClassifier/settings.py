@@ -140,6 +140,15 @@ USE_L10N = True
 
 USE_TZ = True
 
+<<<<<<< HEAD
+=======
+
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+
+LOGIN_REDIRECT_URL = '/workspace'
+LOGOUT_REDIRECT_URL = '/accounts/login'
+>>>>>>> 4aac2c1e0358c7b1fbf876d072032047dcda8c14
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -148,6 +157,24 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
 
+<<<<<<< HEAD
 MEDIA_ROOT = "".join(os.path.split(ROOT_DIRECTORY)[:-1])
 
 MEDIA_URL = '/media/'
+=======
+# Number of seconds of inactivity before a user is marked offline
+
+USER_ONLINE_TIMEOUT = 300
+
+
+# Number of seconds that we will keep track of inactive users for before
+# their last seen is removed from the cache
+
+USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7
+
+
+# Cool time in seconds to start collecting all busy directories
+# and releasing it
+
+REGENERATION_TIMER = 20 * 60
+>>>>>>> 4aac2c1e0358c7b1fbf876d072032047dcda8c14

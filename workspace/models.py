@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.validators import validate_comma_separated_integer_list
 
 
 class RootDirectory(models.Model):
@@ -27,6 +26,19 @@ class Directory(models.Model):
     class Meta:
         verbose_name = 'Directory'
         verbose_name_plural = 'Directories'
+
+
+class ClassifiedByRelation(models.Model):
+    dir = models.ForeignKey(Directory, on_delete=models.CASCADE)
+    user_id = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Statistic record'
+        verbose_name_plural = 'Statistic table'
+        unique_together = ('dir', 'user_id')
+        indexes = [
+            models.Index(fields=['user_id']),
+        ]
 
 
 class DirectoryItem(models.Model):

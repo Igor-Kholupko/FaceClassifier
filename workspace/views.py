@@ -8,15 +8,22 @@ from .forms import (
     MainForm, DirectoryForm, DirectoryItemForm
 )
 from .models import (
-    Directory, DirectoryItem,
+    Directory, DirectoryItem
 )
 from threading import Lock
+from _thread import start_new_thread
+from regeneratedb import regeneration_thread
 import re
 
 
 # Lock for form synchronizing
 
 lock = Lock()
+
+
+# Starting regeneration thread
+
+start_new_thread(regeneration_thread, ())
 
 
 # Max directories on page.
