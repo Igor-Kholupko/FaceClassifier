@@ -53,7 +53,7 @@ MIDDLEWARE = [
 ]
 
 MIDDLEWARE_CLASSES = (
-    'users.middleware.onlineNowMiddleware',
+    'users.middleware.OnlineNowMiddleware',
 )
 
 ROOT_URLCONF = 'FaceClassifier.urls'
@@ -61,8 +61,7 @@ ROOT_URLCONF = 'FaceClassifier.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -103,10 +102,6 @@ THUMBNAILS_DIRECTORIES = [
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
-# Redirect to home URL after login (Default redirects to /accounts/profile/)
-LOGIN_REDIRECT_URL = '/workspace'
-
-LOGOUT_REDIRECT_URL = '/accounts/login'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -140,14 +135,11 @@ USE_L10N = True
 
 USE_TZ = True
 
-<<<<<<< HEAD
-=======
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 
 LOGIN_REDIRECT_URL = '/workspace'
 LOGOUT_REDIRECT_URL = '/accounts/login'
->>>>>>> 4aac2c1e0358c7b1fbf876d072032047dcda8c14
 
 
 # Static files (CSS, JavaScript, Images)
@@ -157,11 +149,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
 
-<<<<<<< HEAD
+
 MEDIA_ROOT = "".join(os.path.split(ROOT_DIRECTORY)[:-1])
 
 MEDIA_URL = '/media/'
-=======
 # Number of seconds of inactivity before a user is marked offline
 
 USER_ONLINE_TIMEOUT = 300
@@ -177,4 +168,3 @@ USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7
 # and releasing it
 
 REGENERATION_TIMER = 20 * 60
->>>>>>> 4aac2c1e0358c7b1fbf876d072032047dcda8c14

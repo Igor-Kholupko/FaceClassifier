@@ -97,4 +97,3 @@ def general_statistics(request):
     time_delta = timedelta(minutes=15)
     starting_time = timezone.now() - time_delta
     return render(request, 'general-stat-log.html', locals())
-
