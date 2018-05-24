@@ -10,7 +10,7 @@ def populate_db(root_directory=None, thumb_directories=None):
     from workspace.models import (
         Directory, RootDirectory, DirectoryItem,
     )
-    root_directory = RootDirectory(path=root_directory, dir_100=thumb_directories[1], dir_200=thumb_directories[2])
+    root_directory = RootDirectory(path=root_directory, dir_100=thumb_directories[1])
     try:
         root_directory.save(using="directories")
     except IntegrityError:
@@ -29,3 +29,4 @@ def populate_db(root_directory=None, thumb_directories=None):
         for j in directory_content:
             directory_item = DirectoryItem(dir=directory, name=j, is_bad=False)
             directory_item.save(using="directories")
+    sys.stdout.write("Directories are imported.\n")

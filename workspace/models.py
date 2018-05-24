@@ -1,11 +1,9 @@
 from django.db import models
-from django.core.validators import validate_comma_separated_integer_list
 
 
 class RootDirectory(models.Model):
     path = models.CharField(max_length=256, unique=True)
     dir_100 = models.CharField(max_length=256)
-    dir_200 = models.CharField(max_length=256)
 
     def __str__(self):
         return "%s" % self.path
@@ -18,7 +16,7 @@ class RootDirectory(models.Model):
 class Directory(models.Model):
     root_dir = models.ForeignKey(RootDirectory, on_delete=models.CASCADE)
     path = models.CharField(max_length=256)
-    is_busy = models.CharField(validators=[validate_comma_separated_integer_list], max_length=256, default='0')
+    is_busy = models.PositiveIntegerField(default=0)
     classifications_amount = models.PositiveIntegerField(default=0)
     directory_class = models.TextField(default="")
 
@@ -28,6 +26,19 @@ class Directory(models.Model):
     class Meta:
         verbose_name = 'Directory'
         verbose_name_plural = 'Directories'
+
+
+class ClassifiedByRelation(models.Model):
+    dir = models.ForeignKey(Directory, on_delete=models.CASCADE)
+    user_id = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Statistic record'
+        verbose_name_plural = 'Statistic table'
+        unique_together = ('dir', 'user_id')
+        indexes = [
+            models.Index(fields=['user_id']),
+        ]
 
 
 class DirectoryItem(models.Model):

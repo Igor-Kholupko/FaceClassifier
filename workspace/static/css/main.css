@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Lato|Raleway');
 
 body {
-	background-color: #000000;
+	background-color: #f0f0f0;
 	font-family: "Lato";
 	font-weight: 300;
 	font-size: 16px;
@@ -195,12 +195,12 @@ hr {
 }
 
 .form-horizontal .btn{
-
+	 float: right;
 	 font-size: 14px;
 	 color: #fff;
 	 background: #00b4ef;
-	 border-radius: 5px;
-	 padding: 8px 30px;
+	 border-radius: 30px;
+	 padding: 10px 25px;
 	 border: none;
 	 text-transform: capitalize;
 	 transition: all 0.5s ease 0s;

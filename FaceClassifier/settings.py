@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'x7s5pos*@$1^$8&vi7)3#f-0torzy(awk(@@l=pm15&nk!w_(#'
+SECRET_KEY = '!!-nuns@77*6=9+j86y^&=&^d7@xt9#em=qnqbwmm)imc58kld'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'widget_tweaks',
-    'login',
+    'users',
     'workspace',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +51,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+MIDDLEWARE_CLASSES = (
+    'users.middleware.OnlineNowMiddleware',
+)
 
 ROOT_URLCONF = 'FaceClassifier.urls'
 
@@ -87,21 +91,16 @@ DATABASES = {
     }
 }
 
-
-# Path to directory which content will be imported
-# to directories DB at 'django-admin --importdirs' command.
-
 ROOT_DIRECTORY = os.path.normpath("D:\\test\\identities_0")
-
 
 # Paths to directories that contains thumbnails
 
 THUMBNAILS_DIRECTORIES = [
     os.path.split(ROOT_DIRECTORY)[-1],
     os.path.split(ROOT_DIRECTORY)[-1] + "_100",
-    os.path.split(ROOT_DIRECTORY)[-1] + "_200",
 ]
 
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -121,6 +120,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+
+LOGIN_REDIRECT_URL = '/workspace'
+
+LOGOUT_REDIRECT_URL = '/accounts/login'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -135,14 +140,20 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Redirect to home URL after login (Default redirects to /accounts/profile/)
-LOGIN_REDIRECT_URL = '/workspace'
-LOGOUT_REDIRECT_URL = '/accounts/login'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 STATIC_URL = '/static/'
+
+
 MEDIA_ROOT = "".join(os.path.split(ROOT_DIRECTORY)[:-1])
+
 MEDIA_URL = '/media/'
+
+# Cool time in seconds to start collecting all busy directories
+# and releasing it
+
+REGENERATION_TIMER = 20 * 60
