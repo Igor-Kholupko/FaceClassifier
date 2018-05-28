@@ -64,13 +64,13 @@
                         {% for user in users %}
 					    <tr class="well">
 					        <td>
-                                {% if user.last_activity > starting_time %}
+                                {% if user.is_online %}
                                     <i class="fa fa-user online"></i>
                                 {% else %}
                                     <i class="fa fa-user offline"></i>
                                 {% endif %}
                             </td>
-					        <th scope="row"><a href="#">{{ user }}</a></th>
+					        <th scope="row"><a href="{% url 'log_statistics_detail' pk=user.pk %}">{{ user }}</a></th>
 					        <td>{{ user.number_of_sorted_folders }}</td>
 					        <td>{{ user.last_activity }}</td>
 					        <td>{{ user.quality_of_work }}</td>

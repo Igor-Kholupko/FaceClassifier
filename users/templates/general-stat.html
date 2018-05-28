@@ -19,7 +19,27 @@
 		});
 		});
 	</script>
-
+  <script>
+	 	var num = [1,1,1,1];
+		function sortTable(table_id, sortColumn) {
+    		var tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
+    		var rowData = tableData.getElementsByTagName('tr');
+	    	for(var i = 0; i < rowData.length - 1; i++) {
+	        for(var j = 0; j < rowData.length - (i + 1); j++) {
+	        if (num[table_id]==1) {
+	            if(Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(j+1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+	                tableData.insertBefore(rowData.item(j+1),rowData.item(j));
+	            }
+       	 	}
+       	 	else if(Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(j+1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+	                tableData.insertBefore(rowData.item(j+1),rowData.item(j));
+	            }
+        }
+   	   		 }
+    	if (num[table_id]==1) num[table_id] = 0;
+    	else num[table_id] = 1;
+	}
+	</script>
 </head>
 {% block content %}
 <body>
@@ -44,42 +64,36 @@
                 <div class="section-inner">
                     <h2 class="heading text-center">General statistics</h2>
                     <div class="content text-center general-table">
-					<table class="table">
+					<table class="table table-hover" id="mainTable">
 					    <thead class="thead-inverse">
 					        <tr>
 					            <th>Online</th>
-					            <th>User</th>
-                                <th>Sorted folders</th>
-                                <th>Sorted images</th>
-                                <th>Marked images</th>
-                                <th>Time of work</th>
-                                <th>Productivity</th>
-                                <th>Quality of work</th>
+                                <th onclick="sortTable('mainTable', 1);">User</th>
+                                <th onclick="sortTable('mainTable', 2);">Sorted folders</th>
+                                <th onclick="sortTable('mainTable', 3);">Last activity</th>
+                                <th onclick="sortTable('mainTable', 4);">Quality of work</th>
 					        </tr>
 					    </thead>
 					    <tbody>
                         {% for user in users %}
 					    <tr class="well">
 					        <td>
-                                {% if user.online %}
+                                {% if user.is_online %}
                                     <i class="fa fa-user online"></i>
                                 {% else %}
                                     <i class="fa fa-user offline"></i>
                                 {% endif %}
                             </td>
-					        <th scope="row"><a href="#">{{ user }}</a></th>
-					        <td>25</td>
-					        <td>63</td>
-					        <td>11</td>
-					        <td>1h 5min</td>
-					        <td>Well</td>
-					        <td>92%</td>
+					        <td scope="row"><a href="{% url 'unlog_statistics_detail' pk=user.pk %}">{{ user }}</a></td>
+					        <td>{{ user.number_of_sorted_folders }}</td>
+					        <td>{{ user.last_activity }}</td>
+					        <td>{{ user.quality_of_work }}</td>
 					    </tr>
                         {% endfor %}
 					  </tbody>
 					</table>
                     </div><!--//content-->
-                </div><!--//section-inner-->                 
+                </div><!--//section-inner-->
             </section><!--//section-->
         </div>
 	</div>

@@ -1,7 +1,7 @@
 from datetime import timedelta
 from django.utils import timezone
 from users.models import CustomUser
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from users.models import CustomUser
 from .forms import (
@@ -33,6 +33,7 @@ MAX_DIRECTORIES = 10
 
 @login_required(login_url='/accounts/login/')
 def workspace(request):
+    CustomUser.update_user_activity(request.user)
     if request.method == "POST":
         d = dict(request.POST)
         for i in range(1, MAX_DIRECTORIES+1):
@@ -47,6 +48,7 @@ def workspace(request):
                 classified_by.save(using='directories')
             except KeyError:
                 break
+        CustomUser.update_user_number_of_sorted_folders(request.user)
         try:
             checkboxes = d['checkbox']
             for i in checkboxes:
@@ -85,8 +87,9 @@ def workspace(request):
 
 @login_required(login_url='/accounts/login/')
 def statistics(request):
+    CustomUser.update_user_activity(user=request.user)
     current_user = request.user
-    current_session_key = request.session.session_key
+    dirs = ClassifiedByRelation.objects.using('directories').filter(user_id=request.user.id)
     return render(request, 'user-stat.html', locals())
 
 
@@ -97,3 +100,11 @@ def general_statistics(request):
     time_delta = timedelta(minutes=1)
     starting_time = timezone.now() - time_delta
     return render(request, 'general-stat-log.html', locals())
+
+
+@login_required(login_url='/accounts/login/')
+def statistics_detail(request, pk):
+    CustomUser.update_user_activity(user=request.user)
+    current_user = get_object_or_404(CustomUser, pk=pk)
+    dirs = ClassifiedByRelation.objects.using('directories').filter(user_id=current_user.id)
+    return render(request, 'statistics_detail_log.html', locals())

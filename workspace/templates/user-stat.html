@@ -45,62 +45,29 @@
         </nav>
 
 	<div class="normalPaddingStatPage">
-		<div class="container gallery-container">
+        <div class="container gallery-container">
 			<section class="section">
                 <div class="section-inner">
                     <h2 class="heading text-center">{{ current_user }}</h2>
                     <div class="content text-center">
-                 	<table class="table">
-					  <thead class="thead-inverse">
-					    <tr>
-					      <th>Session</th>
-					      <th>Sorted folders</th>
-					      <th>Sorted images</th>
-					      <th>Marked images</th>
-					      <th>Time of work</th>
-					      <th>Productivity</th>
-					      <th>Quality of work</th>
-					    </tr>
-					  </thead>
-					  <tbody>
-					    <tr class="well">
-					      <th scope="row"><a href="log1">{{ current_session_key }}</a></th>
-					      <td>25</td>
-					      <td>63</td>
-					      <td>11</td>
-					      <td>1h 5min</td>
-					      <td>Well</td>
-					      <td>92%</td>
-					    </tr>
-					    <tr class="very-good">
-					      <th scope="row"><a href="log2">2</a></th>
-					      <td>119</td>
-					      <td>567</td>
-					      <td>97</td>
-					      <td>3h 35min</td>
-					      <td>Very good</td>
-					      <td>95%</td>
-					    </tr>
-					    <tr class="not-bad">
-					      <th scope="row"><a href="log3">3</a></th>
-					      <td>56</td>
-					      <td>203</td>
-					      <td>40</td>
-					      <td>1h 45min</td>
-					      <td>Not bad</td>
-					      <td>87%</td>
-					    </tr>
-					     <tr class="nice">
-					      <th scope="row"><a href="log4">4</a></th>
-					      <td>58</td>
-					      <td>207</td>
-					      <td>38</td>
-					      <td>1h 45min</td>
-					      <td>Nice</td>
-					      <td>89%</td>
-					    </tr>
-					  </tbody>
-					</table>
+                        <table class="table">
+					        <thead class="thead-inverse">
+					            <tr>
+					                <th>Number of sorted folder</th>
+					                <th>Name of sorted folder</th>
+					                <th>Classification</th>
+					            </tr>
+					        </thead>
+					        <tbody>
+                            {% for dir in dirs %}
+                                <tr class="well">
+					                <th scope="row">{{ forloop.counter }}</th>
+					                <td>{{ dir.dir }}</td>
+					                <td>{{ dir.dir.directory_class }}</td>
+					            </tr>
+                            {% endfor %}
+					        </tbody>
+					    </table>
                     </div><!--//content-->
                 </div><!--//section-inner-->                 
             </section><!--//section-->
