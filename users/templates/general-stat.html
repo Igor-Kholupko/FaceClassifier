@@ -20,26 +20,26 @@
 		});
 	</script>
   <script>
-	 	var num = [1,1,1,1];
-		function sortTable(table_id, sortColumn) {
-    		var tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
-    		var rowData = tableData.getElementsByTagName('tr');
-	    	for(var i = 0; i < rowData.length - 1; i++) {
-	        for(var j = 0; j < rowData.length - (i + 1); j++) {
-	        if (num[table_id]==1) {
-	            if(Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(j+1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
-	                tableData.insertBefore(rowData.item(j+1),rowData.item(j));
-	            }
-       	 	}
-       	 	else if(Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(j+1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
-	                tableData.insertBefore(rowData.item(j+1),rowData.item(j));
-	            }
+     var num = [1,1,1,1];
+    function sortTable(table_id, sortColumn) {
+        var tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
+        var rowData = tableData.getElementsByTagName('tr');
+        for(var i = 0; i < rowData.length - 1; i++) {
+          for(var j = 0; j < rowData.length - (i + 1); j++) {
+          if (num[table_id]==1) {
+              if(Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9]+/g, "")) < Number(rowData.item(j+1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9]+/g, ""))) {
+                  tableData.insertBefore(rowData.item(j+1),rowData.item(j));
+              }
+            }
+            else if(Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9]+/g, "")) > Number(rowData.item(j+1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9]+/g, ""))) {
+                  tableData.insertBefore(rowData.item(j+1),rowData.item(j));
+              }
         }
-   	   		 }
-    	if (num[table_id]==1) num[table_id] = 0;
-    	else num[table_id] = 1;
-	}
-	</script>
+             }
+      if (num[table_id]==1) num[table_id] = 0;
+      else num[table_id] = 1;
+  }
+  </script>
 </head>
 {% block content %}
 <body>
