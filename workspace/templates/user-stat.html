@@ -18,7 +18,27 @@
 		});
 		});
 	</script>
-
+    <script>
+     var num = [1,1,1];
+    function sortTable(table_id, sortColumn) {
+        var tableData = document.getElementById(table_id).getElementsByTagName('tbody').item(0);
+        var rowData = tableData.getElementsByTagName('tr');
+        for(var i = 0; i < rowData.length - 1; i++) {
+          for(var j = 0; j < rowData.length - (i + 1); j++) {
+          if (num[table_id]==1) {
+              if(Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) < Number(rowData.item(j+1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+                  tableData.insertBefore(rowData.item(j+1),rowData.item(j));
+              }
+            }
+            else if(Number(rowData.item(j).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, "")) > Number(rowData.item(j+1).getElementsByTagName('td').item(sortColumn).innerHTML.replace(/[^0-9\.]+/g, ""))) {
+                  tableData.insertBefore(rowData.item(j+1),rowData.item(j));
+              }
+        }
+             }
+      if (num[table_id]==1) num[table_id] = 0;
+      else num[table_id] = 1;
+  }
+  </script>
 </head>
 {% block content %}
     <body>
@@ -50,18 +70,18 @@
                 <div class="section-inner">
                     <h2 class="heading text-center">{{ current_user }}</h2>
                     <div class="content text-center">
-                        <table class="table">
+                        <table class="table" id="mainTable">
 					        <thead class="thead-inverse">
 					            <tr>
-					                <th>Number of sorted folder</th>
-					                <th>Name of sorted folder</th>
-					                <th>Classification</th>
+					                <th onclick="sortTable('mainTable', 0);">Number of sorted folder</th>
+					                <th onclick="sortTable('mainTable', 1);">Name of sorted folder</th>
+					                <th onclick="sortTable('mainTable', 2);">Classification</th>
 					            </tr>
 					        </thead>
 					        <tbody>
                             {% for dir in dirs %}
                                 <tr class="well">
-					                <th scope="row">{{ forloop.counter }}</th>
+					                <td scope="row">{{ forloop.counter }}</td>
 					                <td>{{ dir.dir }}</td>
 					                <td>{{ dir.dir.directory_class }}</td>
 					            </tr>
