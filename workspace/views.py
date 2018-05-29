@@ -1,6 +1,3 @@
-from datetime import timedelta
-from django.utils import timezone
-from users.models import CustomUser
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from users.models import CustomUser
@@ -8,7 +5,7 @@ from .forms import (
     MainForm, DirectoryForm, DirectoryItemForm
 )
 from .models import (
-    Directory, DirectoryItem, ClassifiedByRelation
+    Directory, DirectoryItem, ClassifiedByRelation, RootDirectory
 )
 from threading import Lock
 from _thread import start_new_thread
@@ -41,7 +38,7 @@ def workspace(request):
                 split = re.split("[_\s]", d[("radio_%d" % i)][0])
                 i = Directory.objects.using('directories').get(pk=int(split[0]))
                 i.classifications_amount += 1
-                i.is_busy = '0'
+                i.is_busy = 0
                 i.directory_class = split[1]
                 i.save(using='directories')
                 classified_by = ClassifiedByRelation(dir=i, user_id=request.user.id)
@@ -80,8 +77,9 @@ def workspace(request):
         main_form.user_id.clear()
         main_form.user_id.append(request.user.id)
         lock.release()
-    dictionary = dict()
-    dictionary.update(main_form=locals()['main_form'])
+    root_dir = RootDirectory.objects.using('directories').get(id=1).dir_full
+    thumb_dir = RootDirectory.objects.using('directories').get(id=1).dir_100
+    dictionary = dict(main_form=locals()['main_form'], root_dir=locals()['root_dir'], thumb_dir=locals()['thumb_dir'])
     return render(request, 'main.html', dictionary)
 
 
@@ -97,8 +95,6 @@ def statistics(request):
 def general_statistics(request):
     CustomUser.update_user_activity(user=request.user)
     users = CustomUser.objects.all()
-    time_delta = timedelta(minutes=1)
-    starting_time = timezone.now() - time_delta
     return render(request, 'general-stat-log.html', locals())
 
 
