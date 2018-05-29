@@ -1,14 +1,11 @@
-from datetime import timedelta
-from django.utils import timezone
-from users.models import CustomUser
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from users.models import CustomUser
 from .forms import (
     MainForm, DirectoryForm, DirectoryItemForm
 )
 from .models import (
-    Directory, DirectoryItem, ClassifiedByRelation
+    Directory, DirectoryItem, ClassifiedByRelation, RootDirectory
 )
 from threading import Lock
 from _thread import start_new_thread
@@ -33,6 +30,7 @@ MAX_DIRECTORIES = 10
 
 @login_required(login_url='/accounts/login/')
 def workspace(request):
+    CustomUser.update_user_activity(request.user)
     if request.method == "POST":
         d = dict(request.POST)
         for i in range(1, MAX_DIRECTORIES+1):
@@ -40,13 +38,14 @@ def workspace(request):
                 split = re.split("[_\s]", d[("radio_%d" % i)][0])
                 i = Directory.objects.using('directories').get(pk=int(split[0]))
                 i.classifications_amount += 1
-                i.is_busy = '0'
+                i.is_busy = 0
                 i.directory_class = split[1]
                 i.save(using='directories')
                 classified_by = ClassifiedByRelation(dir=i, user_id=request.user.id)
                 classified_by.save(using='directories')
             except KeyError:
                 break
+        CustomUser.update_user_number_of_sorted_folders(request.user)
         try:
             checkboxes = d['checkbox']
             for i in checkboxes:
@@ -78,15 +77,17 @@ def workspace(request):
         main_form.user_id.clear()
         main_form.user_id.append(request.user.id)
         lock.release()
-    dictionary = dict()
-    dictionary.update(main_form=locals()['main_form'])
+    root_dir = RootDirectory.objects.using('directories').get(id=1).dir_full
+    thumb_dir = RootDirectory.objects.using('directories').get(id=1).dir_100
+    dictionary = dict(main_form=locals()['main_form'], root_dir=locals()['root_dir'], thumb_dir=locals()['thumb_dir'])
     return render(request, 'main.html', dictionary)
 
 
 @login_required(login_url='/accounts/login/')
 def statistics(request):
+    CustomUser.update_user_activity(user=request.user)
     current_user = request.user
-    current_session_key = request.session.session_key
+    dirs = ClassifiedByRelation.objects.using('directories').filter(user_id=request.user.id)
     return render(request, 'user-stat.html', locals())
 
 
@@ -94,6 +95,12 @@ def statistics(request):
 def general_statistics(request):
     CustomUser.update_user_activity(user=request.user)
     users = CustomUser.objects.all()
-    time_delta = timedelta(minutes=1)
-    starting_time = timezone.now() - time_delta
     return render(request, 'general-stat-log.html', locals())
+
+
+@login_required(login_url='/accounts/login/')
+def statistics_detail(request, pk):
+    CustomUser.update_user_activity(user=request.user)
+    current_user = get_object_or_404(CustomUser, pk=pk)
+    dirs = ClassifiedByRelation.objects.using('directories').filter(user_id=current_user.id)
+    return render(request, 'statistics_detail_log.html', locals())

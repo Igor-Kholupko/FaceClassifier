@@ -3,6 +3,7 @@ from django.db import models
 
 class RootDirectory(models.Model):
     path = models.CharField(max_length=256, unique=True)
+    dir_full = models.CharField(max_length=256, unique=True)
     dir_100 = models.CharField(max_length=256)
 
     def __str__(self):
@@ -45,9 +46,6 @@ class DirectoryItem(models.Model):
     dir = models.ForeignKey(Directory, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
     is_bad = models.BooleanField(default=False)
-    # fullsize_image = models.ImageField(upload_to="", default=None)
-    # thumbnail_100x100 = models.ImageField(upload_to="", default=None)
-    # thumbnail_200x200 = models.ImageField(upload_to="", default=None)
 
     def __str__(self):
         return "%s" % self.name

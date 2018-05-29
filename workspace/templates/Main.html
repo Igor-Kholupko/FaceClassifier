@@ -51,16 +51,16 @@
                         <div class="row">
                             {% for item_form in dir_form.item_forms %}
                             <div class="col-sm-4 col-md-2">
-                                <a class="lightbox" href="/media/identities_0/{{ dir_form.data.path }}/{{ item_form.data.name }}">
+                                <a class="lightbox" href="/media/{{ root_dir }}/{{ dir_form.data.path }}/{{ item_form.data.name }}">
                                     <label>
-                                        <img src="/media/identities_0_100/{{ dir_form.data.path }}/{{ item_form.data.name }}" name="checkbox{{ item_form.data.id }}" class="img-responsive img-thumbnail checked" alt="{{ item_form.data.name }}" onclick="clickToImage(this);" />
+                                        <img src="/media/{{ thumb_dir }}/{{ dir_form.data.path }}/{{ item_form.data.name }}" name="checkbox{{ item_form.data.id }}" class="img-responsive img-thumbnail checked" alt="{{ item_form.data.name }}" onclick="clickToImage(this);" />
                                         <input type="checkbox" name="checkbox" id="checkbox{{ item_form.data.id }}" value="{{ item_form.data.id }}" class="hidden" autocomplete="off" filePathId="{{ dir_form.data.id }}" onclick="SetCheckBox(this);" />
                                     </label>
                                 </a>
                             </div>
                             {% endfor %}
                         </div>
-                    <div class="funkyradio" id="funkyradio2">
+                    <div class="funkyradio" id="funkyradio">
                         <div class="row">
                             <div class="col-sm-4 col-md-2">
                                 <div class="funkyradio-success">
