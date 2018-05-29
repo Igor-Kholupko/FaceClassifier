@@ -1,6 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.query import QuerySet
+from django.db.utils import IntegrityError
 from users.models import CustomUser
 from .forms import (
     MainForm, DirectoryForm, DirectoryItemForm
@@ -31,7 +33,16 @@ MAX_DIRECTORIES = 10
 
 @login_required(login_url='/accounts/login/')
 def workspace(request):
+    lock.acquire()
     CustomUser.update_user_activity(request.user)
+    try:
+        root_dir = RootDirectory.objects.using('directories').first()
+        thumb_dir = RootDirectory.objects.using('directories').first().dir_100
+    except ObjectDoesNotExist:
+        root_dir = None
+        thumb_dir = None
+        pass
+    main_form = MainForm()
     if request.method == "POST":
         d = dict(request.POST)
         for i in range(1, MAX_DIRECTORIES+1):
@@ -43,9 +54,12 @@ def workspace(request):
                 i.directory_class = split[1]
                 i.save(using='directories')
                 classified_by = ClassifiedByRelation(dir=i, user_id=request.user.id)
-                classified_by.save(using='directories')
+                try:
+                    classified_by.save(using='directories')
+                except IntegrityError:
+                    pass
             except KeyError:
-                break
+                continue
         CustomUser.update_user_number_of_sorted_folders(request.user)
         try:
             checkboxes = d['checkbox']
@@ -55,38 +69,30 @@ def workspace(request):
                 i.save(using='directories')
         except KeyError:
             pass
-    main_form = MainForm()
-    if main_form.dir_forms.__len__() == 0 or request.method == "POST" or \
-            (main_form.user_id.__len__() != 0 and main_form.user_id[-1] != request.user.id):
-        lock.acquire()
-        dir_list = list()
-        if main_form.dir_forms.__len__() != 0 and request.method != "POST" and main_form.user_id[-1] != request.user.id:
-            dir_list = Directory.objects.using('directories').filter(is_busy=request.user.id)
-        main_form.dir_forms.clear()
-        if dir_list.__len__() == 0:
-            dir_list = Directory.objects.using('directories').filter(is_busy=0,
-                                                                     classifications_amount=0)[:MAX_DIRECTORIES]
-        for directory in dir_list:
-            directory.is_busy = request.user.id
-            directory.save(using='directories')
-            dir_form = DirectoryForm(data=directory)
-            dir_form.item_forms = list()
-            for item in DirectoryItem.objects.using('directories').filter(dir_id=directory):
-                item_form = DirectoryItemForm(data=item)
-                dir_form.item_forms.append(item_form)
-            main_form.dir_forms.append(dir_form)
-        main_form.user_id.clear()
-        main_form.user_id.append(request.user.id)
         lock.release()
-    try:
-        root_dir = RootDirectory.objects.using('directories').get(id=1).dir_full
-        thumb_dir = RootDirectory.objects.using('directories').get(id=1).dir_100
-    except ObjectDoesNotExist:
-        root_dir = None
-        thumb_dir = None
-        pass
+        return redirect('/workspace/')
+    dir_list = QuerySet()
+    dir_list = Directory.objects.using('directories').filter(is_busy=request.user.id)
+    if dir_list.__len__() < MAX_DIRECTORIES:
+        dir_list = (dir_list | (Directory.objects.using('directories').filter(is_busy=0, classifications_amount=0)))[:MAX_DIRECTORIES]
+    dir_forms = list()
+    dir_forms.clear()
+    for directory in dir_list:
+        directory.is_busy = request.user.id
+        directory.save(using='directories')
+        dir_form = DirectoryForm(data=directory)
+        dir_form.item_forms = list()
+        for item in DirectoryItem.objects.using('directories').filter(dir_id=directory):
+            item_form = DirectoryItemForm(data=item)
+            dir_form.item_forms.append(item_form)
+        dir_forms.append(dir_form)
+    main_form.dir_forms = dir_forms.copy()
+    main_form.user_id.clear()
+    main_form.user_id.append(request.user.id)
     dictionary = dict(main_form=locals()['main_form'], root_dir=locals()['root_dir'], thumb_dir=locals()['thumb_dir'])
-    return render(request, 'main.html', dictionary)
+    ret_val = render(request, 'main.html', dictionary)
+    lock.release()
+    return ret_val
 
 
 @login_required(login_url='/accounts/login/')
