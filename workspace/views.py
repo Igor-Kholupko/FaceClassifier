@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from users.models import CustomUser
 from .forms import (
     MainForm, DirectoryForm, DirectoryItemForm
@@ -77,8 +78,13 @@ def workspace(request):
         main_form.user_id.clear()
         main_form.user_id.append(request.user.id)
         lock.release()
-    root_dir = RootDirectory.objects.using('directories').get(id=1).dir_full
-    thumb_dir = RootDirectory.objects.using('directories').get(id=1).dir_100
+    try:
+        root_dir = RootDirectory.objects.using('directories').get(id=1).dir_full
+        thumb_dir = RootDirectory.objects.using('directories').get(id=1).dir_100
+    except ObjectDoesNotExist:
+        root_dir = None
+        thumb_dir = None
+        pass
     dictionary = dict(main_form=locals()['main_form'], root_dir=locals()['root_dir'], thumb_dir=locals()['thumb_dir'])
     return render(request, 'main.html', dictionary)
 

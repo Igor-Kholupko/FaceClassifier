@@ -41,6 +41,9 @@
                 </ul>
             </div>
         </nav>
+        {% if main_form.empty %}
+            <!-- Congratulations! All folders are classified! -->
+        {% else %}
         <form method="post" action="#">
         {% csrf_token %}
             <div class="normalPadding">
@@ -123,6 +126,7 @@
             </div>
             </div>
         </form>
+        {% endif %}
 
     <footer id="footer" class="dark-wrapper">
         <div class="container inner">
