@@ -41,6 +41,9 @@
                 </ul>
             </div>
         </nav>
+        {% if main_form.empty %}
+            <!-- Congratulations! All folders are classified! -->
+        {% else %}
         <form method="post" action="#">
         {% csrf_token %}
             <div class="normalPadding">
@@ -51,16 +54,16 @@
                         <div class="row">
                             {% for item_form in dir_form.item_forms %}
                             <div class="col-sm-4 col-md-2">
-                                <a class="lightbox" href="/media/identities_0/{{ dir_form.data.path }}/{{ item_form.data.name }}">
+                                <a class="lightbox" href="/media/{{ root_dir }}/{{ dir_form.data.path }}/{{ item_form.data.name }}">
                                     <label>
-                                        <img src="/media/identities_0_100/{{ dir_form.data.path }}/{{ item_form.data.name }}" name="checkbox{{ item_form.data.id }}" class="img-responsive img-thumbnail checked" alt="{{ item_form.data.name }}" onclick="clickToImage(this);" />
+                                        <img src="/media/{{ thumb_dir }}/{{ dir_form.data.path }}/{{ item_form.data.name }}" name="checkbox{{ item_form.data.id }}" class="img-responsive img-thumbnail checked" alt="{{ item_form.data.name }}" onclick="clickToImage(this);" />
                                         <input type="checkbox" name="checkbox" id="checkbox{{ item_form.data.id }}" value="{{ item_form.data.id }}" class="hidden" autocomplete="off" filePathId="{{ dir_form.data.id }}" onclick="SetCheckBox(this);" />
                                     </label>
                                 </a>
                             </div>
                             {% endfor %}
                         </div>
-                    <div class="funkyradio" id="funkyradio2">
+                    <div class="funkyradio" id="funkyradio">
                         <div class="row">
                             <div class="col-sm-4 col-md-2">
                                 <div class="funkyradio-success">
@@ -116,6 +119,7 @@
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <form class="form-horizontal down">
+<<<<<<< HEAD
                             <input type="submit" value="Next" class="btn btn-default" onclick="loginBut()"/>
                             <script>
                                function loginBut()
@@ -123,12 +127,16 @@
                                      window.location = "main.html"
                                }
                             </script>
+=======
+                             <input type="submit" value="Next" class="btn btn-default" onclick="localStorage.clear();" />
+>>>>>>> 956b0bf10bc51ba00fcc9c8ab96a60734da153af
                         </form>
                     </div>
                 </div>
             </div>
             </div>
         </form>
+        {% endif %}
 
     <footer id="footer" class="dark-wrapper">
         <div class="container inner">

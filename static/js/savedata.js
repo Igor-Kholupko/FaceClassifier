@@ -1,0 +1,167 @@
+function loginBut()
+{
+	localStorage.removeItem("chekboxArr");
+	localStorage.removeItem("radioArr");
+	localStorage.removeItem("checkBoxDisabledArr");
+/*	localStorage.removeItem("foldersImgAmmount");
+	localStorage.removeItem("imgammount");*/
+	console.log("login");
+     window.location = "main.html"
+}
+
+function SetData (elem) {
+	var folderId = elem.getAttribute('radioGroupId');
+	var radioArr = [];
+	radioArr =  JSON.parse(localStorage.getItem("radioArr"));	
+	if(radioArr==null)	radioArr = [];
+
+/*	radioArr[elem.getAttribute('radioGroupId')] = elem.getAttribute('id');*/
+
+	if(radioArr.indexOf(elem.getAttribute('radioGroupId')) == -1 ){
+		radioArr.push(elem.getAttribute('radioGroupId'));
+		radioArr.push(elem.getAttribute('id'));
+	}
+	else{
+		radioArr[radioArr.indexOf(elem.getAttribute('radioGroupId'))+1] = elem.getAttribute('id');
+	}
+	localStorage.setItem("radioArr", JSON.stringify(radioArr));
+	// if radiobtn 2 or 3 we should disable all checkboxes in this folder
+	var x = document.getElementsByName("checkbox"); // maybe updated
+
+	if(elem.getAttribute('btnType')==1 || elem.getAttribute('btnType')>=4){
+		for (var i = 0; i < x.length; i++) {
+			if(x[i].getAttribute('filePathId')==folderId){
+				x[i].checked = false;
+				x[i].disabled = true;
+				if (document.getElementsByName(x[i].getAttribute('id'))[0].classList.contains('checking')) {
+ 						document.getElementsByName(x[i].getAttribute('id'))[0].classList.remove('checking');
+				}
+			}
+
+		}
+		/// disable all cheboxes in local memory of browser
+	}
+	else{
+		// load all from local data of browser
+		var chekboxArr = [];
+		chekboxArr =  JSON.parse(localStorage.getItem("chekboxArr"));	
+		if(chekboxArr!=null) {
+			for (var i = 0 ; i < chekboxArr.length; i++ ) {
+	 			if(document.getElementById(chekboxArr[i])!=null && chekboxArr[i]!=null && document.getElementById(chekboxArr[i]).getAttribute('filePathId')==folderId ){
+	 				document.getElementById(chekboxArr[i]).checked = true;
+	 			}	 
+			}
+		}
+
+		for (var i = 0; i < x.length; i++) {
+			if(x[i].getAttribute('filePathId')==folderId){
+				x[i].disabled = false;
+				if(x[i].checked==true){
+					if (document.getElementsByName(x[i].getAttribute('id'))[0].classList.contains('checking')==false) {
+ 						document.getElementsByName(x[i].getAttribute('id'))[0].classList.add('checking');
+					}
+				}
+			}
+		}
+	}
+	updateCheckBoxDisabled(x);
+
+} 
+
+function updateCheckBoxDisabled(elem){
+
+	var checkBoxDisabledArr = [];
+	checkBoxDisabledArr =   JSON.parse(localStorage.getItem("checkBoxDisabledArr"));
+	if(checkBoxDisabledArr==null)	checkBoxDisabledArr = [];
+	for (var i = 0; i < elem.length; i++) {
+		if(elem[i].disabled) {
+			if(checkBoxDisabledArr.indexOf(elem[i].getAttribute('id')) == -1) checkBoxDisabledArr.push(elem[i].getAttribute('id'));	
+		}	
+		else {
+			if(checkBoxDisabledArr.indexOf(elem[i].getAttribute('id')) != -1) checkBoxDisabledArr.splice(checkBoxDisabledArr.indexOf(elem[i].getAttribute('id')), 1);
+		}
+	}
+
+
+	localStorage.setItem("checkBoxDisabledArr", JSON.stringify(checkBoxDisabledArr));
+}
+
+function SetCheckBox (elem) {
+	var chekboxArr = [];
+	chekboxArr =   JSON.parse(localStorage.getItem("chekboxArr"));
+	if(chekboxArr==null)	chekboxArr = [];
+	if(elem.checked) {
+		if(chekboxArr.indexOf(elem.getAttribute('id')) == -1) chekboxArr.push(elem.getAttribute('id'));	
+	}	
+	else {
+		if(chekboxArr.indexOf(elem.getAttribute('id')) != -1) {			
+			chekboxArr.splice(chekboxArr.indexOf(elem.getAttribute('id')), 1);
+		}
+	}
+
+	localStorage.setItem("chekboxArr", JSON.stringify(chekboxArr));
+} 
+
+
+function GetData (item) { 
+    return localStorage.getItem(item); 
+}
+
+function clickToImage(elem){
+	if(document.getElementById(elem.getAttribute("name"))!=null && document.getElementById(elem.getAttribute("name")).disabled==false){
+		if(elem.classList.contains('checking')==false)
+				elem.classList.add('checking');
+		else 	elem.classList.remove('checking');
+	}
+
+}
+
+
+window.onload = function() {
+/*	localStorage.setItem("foldersImgAmmount", JSON.stringify([10,8])); // только для теста массив папок с количеством изображений в них
+	localStorage.setItem("imgammount", 18 ); // только для теста  сколько всего изображений
+
+	var imgammount = localStorage.getItem("imgammount"); 
+	var foldersImgAmmount =  JSON.parse(localStorage.getItem("foldersImgAmmount"));*/
+
+	var radioArr = [];
+	radioArr =  JSON.parse(localStorage.getItem("radioArr"));	
+	if(radioArr!=null) 
+		for (var i = 0 ; i < radioArr.length; i++ ) {
+			 if(document.getElementById(radioArr[i])!=null)
+			 document.getElementById(radioArr[i]).checked = true;
+		}
+
+	var chekboxArr = [];
+	chekboxArr =  JSON.parse(localStorage.getItem("chekboxArr"));	
+	if(chekboxArr!=null) {
+		for (var i = 0 ; i < chekboxArr.length; i++ ) {
+ 			 
+ 			if(document.getElementById(chekboxArr[i])!=null && chekboxArr[i]!=null){
+ 				document.getElementById(chekboxArr[i]).checked = true;
+ 				document.getElementsByName(chekboxArr[i])[0].className+=" checking";
+ 			}
+			
+			 
+		}
+	}
+
+	/// disable all find locked checkboxes
+	var checkBoxDisabledArr = [];
+	checkBoxDisabledArr =  JSON.parse(localStorage.getItem("checkBoxDisabledArr"));	
+	if(checkBoxDisabledArr!=null) {
+		for (var i = 0 ; i < checkBoxDisabledArr.length; i++ ) {
+ 			 
+ 			if(document.getElementById(checkBoxDisabledArr[i])!=null && checkBoxDisabledArr[i]!=null){
+ 				document.getElementById(checkBoxDisabledArr[i]).disabled = true;
+ 				document.getElementById(checkBoxDisabledArr[i]).checked = false;
+ 				if(document.getElementsByName(checkBoxDisabledArr[i])[0].classList.contains('checking')){
+ 					document.getElementsByName(checkBoxDisabledArr[i])[0].classList.remove('checking');		
+ 				}	
+ 			}
+			
+			 
+		}
+	}
+
+}

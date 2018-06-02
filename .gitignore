@@ -1,11 +1,6 @@
 ﻿venv/*
-
 .idea/*
-
 __pycache__/*
-*
-.pyc
-*
-.jpg
-*
-.sqlite3
+*.pyc
+*.jpg
+*.sqlite3

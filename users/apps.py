@@ -1,5 +1,5 @@
-from django.apps import AppConfig
+from django.contrib.auth.apps import AuthConfig
 
 
-class UsersConfig(AppConfig):
+class UsersConfig(AuthConfig):
     name = 'users'
