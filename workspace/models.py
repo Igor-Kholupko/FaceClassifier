@@ -25,6 +25,7 @@ class Directory(models.Model):
         return "%s" % self.path
 
     class Meta:
+        unique_together = ('path', 'root_dir')
         verbose_name = 'Directory'
         verbose_name_plural = 'Directories'
 
@@ -53,3 +54,13 @@ class DirectoryItem(models.Model):
     class Meta:
         verbose_name = "Directory Item"
         verbose_name_plural = "Directory Items"
+
+
+class StatisticDirectory(models.Model):
+    dir = models.OneToOneField(Directory, on_delete=models.CASCADE)
+    directory_class = models.TextField(default="")
+    bad_photos = models.CharField(max_length=1024, default="")
+
+    class Meta:
+        verbose_name = 'Productivity record'
+        verbose_name_plural = 'Productivity table'

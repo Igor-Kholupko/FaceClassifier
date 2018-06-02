@@ -92,8 +92,8 @@ class FaceClassifierManagementUtility(ManagementUtility):
         # 'django-admin --importdirs' to pre-populate directories database.
         elif subcommand == 'version' or self.argv[1:] == ['--version']:
             sys.stdout.write(django.get_version() + '\n')
-        elif subcommand == 'importdirs' or self.argv[1:] == ['--importdirs']:
-            populate_db(settings.ROOT_DIRECTORY, settings.THUMBNAILS_DIRECTORIES)
+        elif subcommand == 'importdirs' or subcommand == '--importdirs':
+            populate_db(settings.ROOT_DIRECTORY, settings.THUMBNAILS_DIRECTORIES, args[0] == '--check')
         elif self.argv[1:] in (['--help'], ['-h']):
             sys.stdout.write(self.main_help_text() + '\n')
         else:

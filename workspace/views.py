@@ -36,9 +36,9 @@ def workspace(request):
     lock.acquire()
     CustomUser.update_user_activity(request.user)
     try:
-        root_dir = RootDirectory.objects.using('directories').first()
+        root_dir = RootDirectory.objects.using('directories').first().dir_full
         thumb_dir = RootDirectory.objects.using('directories').first().dir_100
-    except ObjectDoesNotExist:
+    except (ObjectDoesNotExist, AttributeError):
         root_dir = None
         thumb_dir = None
         pass
