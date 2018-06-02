@@ -74,7 +74,7 @@
                                 <div class="funkyradio-success">
                                     <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
                                            value="{{ dir_form.data.id }}_Label" id="{{ dir_form.data.id }}_Label" btnType="2" onchange="SetData(this);"/>
-                                    <label for="{{ dir_form.data.id }}_Label">Label</label>
+                                    <label for="{{ dir_form.data.id }}_Label">Multiple</label>
                                 </div>
                             </div>
 
@@ -82,7 +82,7 @@
                                 <div class="funkyradio-success">
                                     <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
                                            value="{{ dir_form.data.id }}_Extra" id="{{ dir_form.data.id }}_Extra" btnType="3" onchange="SetData(this);"/>
-                                    <label for="{{ dir_form.data.id }}_Extra">Extra</label>
+                                    <label for="{{ dir_form.data.id }}_Extra">Trash folder</label>
                                 </div>
                             </div>
 
@@ -90,7 +90,7 @@
                                 <div class="funkyradio-success">
                                     <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
                                            value="{{ dir_form.data.id }}_Blurry" id="{{ dir_form.data.id }}_Blurry" btnType="4" onchange="SetData(this);"/>
-                                    <label for="{{ dir_form.data.id }}_Blurry">Blurry</label>
+                                    <label class="radioColor" for="{{ dir_form.data.id }}_Blurry">Not lg or center</label>
                                 </div>
                             </div>
 
@@ -98,14 +98,14 @@
                                 <div class="funkyradio-success">
                                     <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
                                            value="{{ dir_form.data.id }}_Multiple" id="{{ dir_form.data.id }}_Multiple" btnType="5" onchange="SetData(this);"/>
-                                    <label for="{{ dir_form.data.id }}_Multiple">Multiple</label>
+                                    <label class="radioColor" for="{{ dir_form.data.id }}_Multiple">Extra</label>
                                 </div>
                             </div>
                             <div class="col-sm-4 col-md-2">
                                 <div class="funkyradio-success">
                                     <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
                                            value="{{ dir_form.data.id }}_Nonperson" id="{{ dir_form.data.id }}_Nonperson" btnType="6" onchange="SetData(this);"/>
-                                    <label for="{{ dir_form.data.id }}_Nonperson">Nonperson</label>
+                                    <label class="radioColor" for="{{ dir_form.data.id }}_Nonperson">Trash images</label>
                                 </div>
                             </div>
                         </div>
@@ -114,19 +114,9 @@
                 </div>
                     {% endfor %}
                 <div class="row">
-                    <div class="col-md-12 text-center">
+                    <div class="col-md-12 text-center btn-ok">
                         <form class="form-horizontal down">
-<<<<<<< HEAD
-                             <input type="submit" value="Next" class="btn btn-default"/>
-=======
-                            <input type="submit" value="Next" class="btn btn-default" onclick="loginBut()"/>
-                            <script>
-                               function loginBut()
-                               {
-                                     window.location = "main.html"
-                               }
-                            </script>
->>>>>>> parent of 8bcb1e0... Merge branch 'editing' of https://github.com/Igor-Kholupko/FaceClassifier into editing
+                            <input type="submit" id="btnNext" value="Next" class="btn btn-secondary" onclick="loginBut()" disabled />
                         </form>
                     </div>
                 </div>

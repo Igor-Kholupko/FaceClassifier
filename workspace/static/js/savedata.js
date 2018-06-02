@@ -1,5 +1,8 @@
+var foldersImgAmmount = 20 ; // folders ammount * 2
+
 function loginBut()
 {
+	console.log("loginbtnm");
 	localStorage.removeItem("chekboxArr");
 	localStorage.removeItem("radioArr");
 	localStorage.removeItem("checkBoxDisabledArr");
@@ -12,7 +15,7 @@ function loginBut()
 function SetData (elem) {
 	var folderId = elem.getAttribute('radioGroupId');
 	var radioArr = [];
-	radioArr =  JSON.parse(localStorage.getItem("radioArr"));	
+	radioArr =  JSON.parse(localStorage.getItem("radioArr"));
 	if(radioArr==null)	radioArr = [];
 
 /*	radioArr[elem.getAttribute('radioGroupId')] = elem.getAttribute('id');*/
@@ -25,10 +28,18 @@ function SetData (elem) {
 		radioArr[radioArr.indexOf(elem.getAttribute('radioGroupId'))+1] = elem.getAttribute('id');
 	}
 	localStorage.setItem("radioArr", JSON.stringify(radioArr));
+
+	if(radioArr.length==foldersImgAmmount) {
+		document.getElementById("btnNext").disabled = false;
+		if(document.getElementById("btnNext").classList.contains('btn-secondary')){
+			document.getElementById("btnNext").classList.remove('btn-secondary');
+			document.getElementById("btnNext").classList.add('btn-primary');
+		}
+	}
 	// if radiobtn 2 or 3 we should disable all checkboxes in this folder
 	var x = document.getElementsByName("checkbox"); // maybe updated
 
-	if(elem.getAttribute('btnType')==1 || elem.getAttribute('btnType')>=4){
+	if(elem.getAttribute('btnType')>0 && elem.getAttribute('btnType')<=3){
 		for (var i = 0; i < x.length; i++) {
 			if(x[i].getAttribute('filePathId')==folderId){
 				x[i].checked = false;
@@ -44,12 +55,12 @@ function SetData (elem) {
 	else{
 		// load all from local data of browser
 		var chekboxArr = [];
-		chekboxArr =  JSON.parse(localStorage.getItem("chekboxArr"));	
+		chekboxArr =  JSON.parse(localStorage.getItem("chekboxArr"));
 		if(chekboxArr!=null) {
 			for (var i = 0 ; i < chekboxArr.length; i++ ) {
 	 			if(document.getElementById(chekboxArr[i])!=null && chekboxArr[i]!=null && document.getElementById(chekboxArr[i]).getAttribute('filePathId')==folderId ){
 	 				document.getElementById(chekboxArr[i]).checked = true;
-	 			}	 
+	 			}
 			}
 		}
 
@@ -66,7 +77,7 @@ function SetData (elem) {
 	}
 	updateCheckBoxDisabled(x);
 
-} 
+}
 
 function updateCheckBoxDisabled(elem){
 
@@ -75,8 +86,8 @@ function updateCheckBoxDisabled(elem){
 	if(checkBoxDisabledArr==null)	checkBoxDisabledArr = [];
 	for (var i = 0; i < elem.length; i++) {
 		if(elem[i].disabled) {
-			if(checkBoxDisabledArr.indexOf(elem[i].getAttribute('id')) == -1) checkBoxDisabledArr.push(elem[i].getAttribute('id'));	
-		}	
+			if(checkBoxDisabledArr.indexOf(elem[i].getAttribute('id')) == -1) checkBoxDisabledArr.push(elem[i].getAttribute('id'));
+		}
 		else {
 			if(checkBoxDisabledArr.indexOf(elem[i].getAttribute('id')) != -1) checkBoxDisabledArr.splice(checkBoxDisabledArr.indexOf(elem[i].getAttribute('id')), 1);
 		}
@@ -91,20 +102,20 @@ function SetCheckBox (elem) {
 	chekboxArr =   JSON.parse(localStorage.getItem("chekboxArr"));
 	if(chekboxArr==null)	chekboxArr = [];
 	if(elem.checked) {
-		if(chekboxArr.indexOf(elem.getAttribute('id')) == -1) chekboxArr.push(elem.getAttribute('id'));	
-	}	
+		if(chekboxArr.indexOf(elem.getAttribute('id')) == -1) chekboxArr.push(elem.getAttribute('id'));
+	}
 	else {
-		if(chekboxArr.indexOf(elem.getAttribute('id')) != -1) {			
+		if(chekboxArr.indexOf(elem.getAttribute('id')) != -1) {
 			chekboxArr.splice(chekboxArr.indexOf(elem.getAttribute('id')), 1);
 		}
 	}
 
 	localStorage.setItem("chekboxArr", JSON.stringify(chekboxArr));
-} 
+}
 
 
-function GetData (item) { 
-    return localStorage.getItem(item); 
+function GetData (item) {
+    return localStorage.getItem(item);
 }
 
 function clickToImage(elem){
@@ -121,16 +132,26 @@ window.onload = function() {
 /*	localStorage.setItem("foldersImgAmmount", JSON.stringify([10,8])); // только для теста массив папок с количеством изображений в них
 	localStorage.setItem("imgammount", 18 ); // только для теста  сколько всего изображений
 
-	var imgammount = localStorage.getItem("imgammount"); 
+	var imgammount = localStorage.getItem("imgammount");
 	var foldersImgAmmount =  JSON.parse(localStorage.getItem("foldersImgAmmount"));*/
 
 	var radioArr = [];
-	radioArr =  JSON.parse(localStorage.getItem("radioArr"));	
-	if(radioArr!=null) 
+	radioArr =  JSON.parse(localStorage.getItem("radioArr"));
+	if(radioArr!=null)
 		for (var i = 0 ; i < radioArr.length; i++ ) {
 			 if(document.getElementById(radioArr[i])!=null)
 			 document.getElementById(radioArr[i]).checked = true;
 		}
+	if(radioArr!=null) {
+		if(radioArr.length==foldersImgAmmount){
+			document.getElementById("btnNext").disabled = false;
+			if(document.getElementById("btnNext").classList.contains('btn-secondary')){
+				document.getElementById("btnNext").classList.remove('btn-secondary');
+				document.getElementById("btnNext").classList.add('btn-primary');
+			}
+		}
+
+	}
 
 	var chekboxArr = [];
 	chekboxArr =  JSON.parse(localStorage.getItem("chekboxArr"));	
