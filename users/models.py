@@ -1,12 +1,11 @@
+from datetime import timedelta
 from django.contrib.auth.models import AbstractUser
-from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from workspace.models import ClassifiedByRelation
 
 
 class CustomUser(AbstractUser):
-    is_logged = models.BooleanField(default=False)
     number_of_sorted_folders = models.PositiveSmallIntegerField(default=0)
     last_activity = models.DateTimeField(default=timezone.now)
     quality_of_work = models.DecimalField(default=1.0, max_digits=5, decimal_places=4)
@@ -16,14 +15,12 @@ class CustomUser(AbstractUser):
         return self.username
 
     def is_online(self):
-        if not self.is_logged:
-            return False
+        time_delta = timedelta(minutes=10)
+        starting_time = timezone.now() - time_delta
+        if self.last_activity > starting_time:
+            return True
         else:
-            starting_time = timezone.now() - settings.USER_INACTIVITY_TIME
-            if self.last_activity > starting_time:
-                return True
-            else:
-                return False
+            return False
 
     @staticmethod
     def update_user_number_of_sorted_folders(user):
@@ -37,6 +34,6 @@ class CustomUser(AbstractUser):
         CustomUser.objects.update_or_create(id=user.id, defaults={'last_activity': timezone.now()})
 
     @staticmethod
-    def get_user_activities(time_delta=settings.USER_INACTIVITY_TIME):
+    def get_user_activities(time_delta=timedelta(minutes=10)):
         starting_time = timezone.now() - time_delta
         return CustomUser.objects.filter(last_activity__gte=starting_time).order_by('-last_activity')

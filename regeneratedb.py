@@ -1,6 +1,7 @@
 from django.core.exceptions import AppRegistryNotReady
 from django.conf import settings
 from time import sleep
+# from [user_model_module] import [user_class]
 
 
 def release_directories(user_id=0):
@@ -18,11 +19,9 @@ def release_directories(user_id=0):
 def regeneration_thread():
     while True:
         sleep(settings.REGENERATION_TIMER)
-        try:
-            from users.models import CustomUser
-            for user in CustomUser.objects.filter(is_logged=True):
-                if not user.is_online():
-                    release_directories(user.id)
-        except ModuleNotFoundError or AppRegistryNotReady:
-            continue
+        """
+        for user in [user_class].objects.all():
+            if not user.is_online:
+                release_directories(user.id)
+        """
         print("DATABASE REGENERATION")

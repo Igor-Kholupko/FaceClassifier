@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -97,8 +96,8 @@ ROOT_DIRECTORY = os.path.normpath("D:\\test\\identities_0")
 # Paths to directories that contains thumbnails
 
 THUMBNAILS_DIRECTORIES = [
-    os.path.basename(ROOT_DIRECTORY),
-    os.path.basename(ROOT_DIRECTORY) + "_100",
+    os.path.split(ROOT_DIRECTORY)[-1],
+    os.path.split(ROOT_DIRECTORY)[-1] + "_100",
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -148,7 +147,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
 
-MEDIA_ROOT = os.path.dirname(os.path.abspath(ROOT_DIRECTORY))
+MEDIA_ROOT = "".join(os.path.split(ROOT_DIRECTORY)[:-1])
 
 MEDIA_URL = '/media/'
 
@@ -156,5 +155,3 @@ MEDIA_URL = '/media/'
 # and releasing it
 
 REGENERATION_TIMER = 20 * 60
-
-USER_INACTIVITY_TIME = timedelta(minutes=10)

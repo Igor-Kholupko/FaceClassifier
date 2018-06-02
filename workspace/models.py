@@ -3,7 +3,6 @@ from django.db import models
 
 class RootDirectory(models.Model):
     path = models.CharField(max_length=256, unique=True)
-    dir_full = models.CharField(max_length=256, unique=True)
     dir_100 = models.CharField(max_length=256)
 
     def __str__(self):
@@ -25,7 +24,6 @@ class Directory(models.Model):
         return "%s" % self.path
 
     class Meta:
-        unique_together = ('path', 'root_dir')
         verbose_name = 'Directory'
         verbose_name_plural = 'Directories'
 
@@ -47,6 +45,9 @@ class DirectoryItem(models.Model):
     dir = models.ForeignKey(Directory, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
     is_bad = models.BooleanField(default=False)
+    # fullsize_image = models.ImageField(upload_to="", default=None)
+    # thumbnail_100x100 = models.ImageField(upload_to="", default=None)
+    # thumbnail_200x200 = models.ImageField(upload_to="", default=None)
 
     def __str__(self):
         return "%s" % self.name
@@ -54,13 +55,3 @@ class DirectoryItem(models.Model):
     class Meta:
         verbose_name = "Directory Item"
         verbose_name_plural = "Directory Items"
-
-
-class StatisticDirectory(models.Model):
-    dir = models.OneToOneField(Directory, on_delete=models.CASCADE)
-    directory_class = models.TextField(default="")
-    bad_photos = models.CharField(max_length=1024, default="")
-
-    class Meta:
-        verbose_name = 'Productivity record'
-        verbose_name_plural = 'Productivity table'
