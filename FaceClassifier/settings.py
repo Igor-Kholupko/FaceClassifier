@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 from datetime import timedelta
+from django.contrib.messages import constants as message_constants
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,6 +27,8 @@ SECRET_KEY = '!!-nuns@77*6=9+j86y^&=&^d7@xt9#em=qnqbwmm)imc58kld'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+STOPPED = False
 
 ALLOWED_HOSTS = []
 
@@ -159,12 +163,10 @@ REGENERATION_TIMER = 20 * 60
 
 USER_INACTIVITY_TIME = timedelta(minutes=10)
 
-from django.contrib.messages import constants as message_constants
 MESSAGE_LEVEL = message_constants.DEBUG
 
 MESSAGE_LEVEL = 10  # DEBUG
 
-from django.contrib.messages import constants as messages
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',

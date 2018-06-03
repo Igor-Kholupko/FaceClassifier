@@ -206,3 +206,7 @@ def password_edit(request):
 
 def help(request):
     return render(request, 'help.html')
+
+
+def service_stopped(request):
+    return render(request, 'service-stopped.html')
