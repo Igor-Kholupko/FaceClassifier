@@ -11,11 +11,21 @@
 	<link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="{% static 'css/gallery-grid.css' %}">
     <link rel="stylesheet" href="{% static 'css/baguetteBox.min.css' %}">
+    <link rel="stylesheet" href="{%static 'css/font-awesome.min.css'%}">
+    <link rel="stylesheet" href="{%static 'css/modal.css'%}">
 
 	<script src="{% static 'js/gallery-grid.js' %}"></script>
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/savedata.js' %}"></script>
+    <script>
+    function showModel() {
+         document.getElementById('elem').style.display = 'block';
+    }
+    function closeModel() {
+         document.getElementById('elem').style.display = 'none';
+      }
+  </script>
 </head>
 
 {% block content %}
@@ -44,6 +54,7 @@
                 </ul>
             </div>
         </nav>
+         <i class="fa fa-question-circle fa-2x help" onclick="showModel()"></i>
         <form method="post" action="#">
         {% csrf_token %}
             <div class="normalPadding">
@@ -125,7 +136,66 @@
                 </div>
             </div>
             </div>
-        </form>
+                </form>
+            <div class="modal" id="elem">
+      <div class="modal-content">
+        <div class="pull-right">
+          <span class="close" onclick="closeModel()">&times;</span>
+        </div>
+          <section class="section">
+                    <div class="section-inner">
+                        <h2 class="heading text-center">Help</h2>
+                        <div class="content text-center">
+                <table class="table table-reflow table-hover table-striped">
+                  <thead>
+                    <tr>
+                      <th>Radiobutton</th>
+                      <th>Description</th>
+                      <th>Click on photos</th>
+                    </tr>
+                  </thead>
+                 <tbody>
+                    <tr>
+                      <th scope="row">Normal</th>
+                      <td>The folder contains photos<br>of the same person.</td>
+                      <td><i class="fa fa-minus not-online"></i></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Multiple</th>
+                      <td>The folder contains photos of several<br>people but no one prevails.</td>
+                      <td><i class="fa fa-minus not-online"></i></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Trash folder</th>
+                      <td>The folder contains random photos and<br>there are no people on them.</td>
+                      <td><i class="fa fa-minus not-online"></i></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Not lg or center</th>
+                      <td>The folder contains photos of several<br>people and the main person<br>is't in the center.</td>
+                      <td><i class="fa fa-check online"></i></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Extra</th>
+                      <td>The folder contains photos of several<br>people but one of them prevails.</td>
+                      <td><i class="fa fa-check online"></i></td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Trash images</th>
+                      <td>The folder contains trash(blurry) photos.</td>
+                      <td><i class="fa fa-check online"></i></td>
+                    </tr>
+
+                  </tbody>
+                </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+      </div>
+    </div>
+
 
     <footer id="footer" class="dark-wrapper">
         <div class="container inner">

@@ -1,3 +1,19 @@
+.normalWaitPadding {
+    padding-top: 30px;
+    padding-bottom: 55px;
+}
+
+.timer-style {
+	background-color: #FAF0E6;
+	color: #800000;
+	font-size: 20px;
+}
+
+img.coffee {
+	width: 300px;
+	height: 300px;
+}
+
 .normalPadding {
     padding-top: 30px;
     padding-bottom: 249px;
