@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.shortcuts import render, get_object_or_404
-from workspace.models import ClassifiedByRelation
+from workspace.models import Directory, ClassifiedByRelation
 from .models import CustomUser
 
 
@@ -11,6 +11,9 @@ def login(request):
 
 def general_statistics(request):
     users = CustomUser.objects.all()
+    dirs_all = Directory.objects.using('directories').all()
+    dirs_classified = Directory.objects.using('directories').filter(classifications_amount=1)
+    percent = dirs_classified.__len__()/dirs_all.__len__()*100
     return render(request, 'general-stat.html', locals())
 
 
