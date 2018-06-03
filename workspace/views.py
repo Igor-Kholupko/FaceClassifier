@@ -1,5 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.query import QuerySet
 from django.db.utils import IntegrityError
@@ -116,3 +119,20 @@ def statistics_detail(request, pk):
     current_user = get_object_or_404(CustomUser, pk=pk)
     dirs = ClassifiedByRelation.objects.using('directories').filter(user_id=current_user.id)
     return render(request, 'statistics_detail_log.html', locals())
+
+
+@login_required(login_url='/accounts/login/')
+def password_edit(request):
+    u = CustomUser.objects.get(username=request.user)
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was updated successfully!')
+            return redirect('password_edit')
+        else:
+            messages.warning(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'password_edit.html', {'form': form})

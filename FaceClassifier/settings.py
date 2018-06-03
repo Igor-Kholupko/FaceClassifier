@@ -158,3 +158,18 @@ MEDIA_URL = '/media/'
 REGENERATION_TIMER = 20 * 60
 
 USER_INACTIVITY_TIME = timedelta(minutes=10)
+
+from django.contrib.messages import constants as message_constants
+MESSAGE_LEVEL = message_constants.DEBUG
+
+MESSAGE_LEVEL = 10  # DEBUG
+
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
