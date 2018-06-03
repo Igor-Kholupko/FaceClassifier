@@ -53,45 +53,66 @@ def workspace(request):
                 split = re.split("[_\s]", d[("radio_%d" % i)][0])
                 i = Directory.objects.using('directories').get(pk=int(split[0]))
                 i.classifications_amount += 1
-                i.is_busy = 0
-                i.directory_class = split[1]
-                i.save(using='directories')
-                classified_by = ClassifiedByRelation(dir=i, user_id=request.user.id)
-                if i.classifications_amount == 3:
-                    stat_dir = StatisticDirectory.objects.using('directories').get(pk=int(split[0]))
-                    first_user = CustomUser.objects.get(pk=int(classified_by))
-                    second_user = CustomUser.objects.get(pk=int(stat_dir.user_id_one))
-                    third_user = CustomUser.objects.get(pk=int(stat_dir.user_id_two))
-                    if i.directory_class == stat_dir.directory_class_one:
-                        if stat_dir.directory_class_one == stat_dir.directory_class_two:
-                            first_user.quality_of_work = (first_user.quality_of_work + 1)/2
-                            second_user.quality_of_work = (second_user.quality_of_work + 1)/2
-                            third_user.quality_of_work = (third_user.quality_of_work + 1)/2
-                        else:
-                            first_user.quality_of_work = (first_user.quality_of_work + 1) / 2
-                            second_user.quality_of_work = (second_user.quality_of_work + 1) / 2
-                            third_user.quality_of_work /= 2
+                if i.classifications_amount == 1:
+                    i.is_busy = 0
+                    i.directory_class = split[1]
+                    i.save(using='directories')
+                    classified_by = ClassifiedByRelation(dir=i, user_id=request.user.id)
+                    try:
+                        classified_by.save(using='directories')
+                    except IntegrityError:
+                        pass
                     else:
-                        if i.directory_class == stat_dir.directory_class_two:
-                            first_user.quality_of_work = (first_user.quality_of_work + 1) / 2
-                            second_user.quality_of_work /= 2
-                            third_user.quality_of_work = (third_user.quality_of_work + 1) / 2
-                        else :
-                            if stat_dir.directory_class_one == stat_dir.directory_class_two:
-                                first_user.quality_of_work /= 2
-                                second_user.quality_of_work = (second_user.quality_of_work + 1) / 2
-                                third_user.quality_of_work = (third_user.quality_of_work + 1) / 2
+                        if i.classifications_amount == 2:
+                            stat_info = StatisticDirectory(dir=i,
+                                                           user_id_one=request.user.id,
+                                                           directory_class_one=split[1])
+                            try:
+                                stat_info.save(using='directories')
+                            except IntegrityError:
+                                pass
+                        else:
+                            stat_info = StatisticDirectory(dir=i,
+                                                           user_id_one=request.user.id,
+                                                           directory_class_one=split[1])
+                            try:
+                                stat_info.save(using='directories')
+                            except IntegrityError:
+                                pass
+                            classified_by_one = ClassifiedByRelation.objects.get(dir=i)
+                            stat_dir = StatisticDirectory.objects.using('directories').get(pk=int(split[0]))
+                            first_user = CustomUser.objects.get(pk=int(classified_by_one))
+                            second_user = CustomUser.objects.get(pk=int(stat_dir.user_id_one))
+                            third_user = CustomUser.objects.get(pk=int(stat_dir.user_id_two))
+                            if i.directory_class == stat_dir.directory_class_one:
+                                if stat_dir.directory_class_one == stat_dir.directory_class_two:
+                                    first_user.quality_of_work = (first_user.quality_of_work + 1)/2
+                                    second_user.quality_of_work = (second_user.quality_of_work + 1)/2
+                                    third_user.quality_of_work = (third_user.quality_of_work + 1)/2
+                                else:
+                                    first_user.quality_of_work = (first_user.quality_of_work + 1) / 2
+                                    second_user.quality_of_work = (second_user.quality_of_work + 1) / 2
+                                    third_user.quality_of_work /= 2
                             else:
-                                first_user.quality_of_work = 0
-                                second_user.quality_of_work = 0
-                                third_user.quality_of_work = 0
-                    first_user.save()
-                    second_user.save()
-                    third_user.save()
-                try:
-                    classified_by.save(using='directories')
-                except IntegrityError:
-                    pass
+                                if i.directory_class == stat_dir.directory_class_two:
+                                    first_user.quality_of_work = (first_user.quality_of_work + 1) / 2
+                                    second_user.quality_of_work /= 2
+                                    third_user.quality_of_work = (third_user.quality_of_work + 1) / 2
+                                else :
+                                    if stat_dir.directory_class_one == stat_dir.directory_class_two:
+                                        first_user.quality_of_work /= 2
+                                        second_user.quality_of_work = (second_user.quality_of_work + 1) / 2
+                                        third_user.quality_of_work = (third_user.quality_of_work + 1) / 2
+                                    else:
+                                        first_user.quality_of_work = 0
+                                        second_user.quality_of_work = 0
+                                        third_user.quality_of_work = 0
+                            try:
+                                first_user.save()
+                                second_user.save()
+                                third_user.save()
+                            except IntegrityError:
+                                pass
             except KeyError:
                 continue
         CustomUser.update_user_number_of_sorted_folders(request.user)
