@@ -45,7 +45,7 @@ class ClassifiedByRelation(models.Model):
 
 class DirectoryItem(models.Model):
     dir = models.ForeignKey(Directory, on_delete=models.CASCADE)
-    name = models.CharField(max_length=256)
+    name = models.CharField(default="", max_length=256)
     is_bad = models.BooleanField(default=False)
 
     def __str__(self):
@@ -58,8 +58,12 @@ class DirectoryItem(models.Model):
 
 class StatisticDirectory(models.Model):
     dir = models.OneToOneField(Directory, on_delete=models.CASCADE)
-    directory_class = models.TextField(default="")
-    bad_photos = models.CharField(max_length=1024, default="")
+    user_id_one = models.IntegerField(default=0)
+    directory_class_one = models.TextField(default="")
+    bad_photos_one = models.CharField(max_length=1024, default="")
+    user_id_two = models.IntegerField(default=0)
+    directory_class_two = models.TextField(default="")
+    bad_photos_two = models.CharField(max_length=1024, default="")
 
     class Meta:
         verbose_name = 'Productivity record'
