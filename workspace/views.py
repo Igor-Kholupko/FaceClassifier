@@ -110,6 +110,9 @@ def statistics(request):
 def general_statistics(request):
     CustomUser.update_user_activity(user=request.user)
     users = CustomUser.objects.all()
+    dirs_all = Directory.objects.using('directories').count()
+    dirs_classified = Directory.objects.using('directories').exclude(classifications_amount=0).count()
+    percent = dirs_classified/dirs_all*100
     return render(request, 'general-stat-log.html', locals())
 
 
@@ -136,3 +139,8 @@ def password_edit(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'password_edit.html', {'form': form})
+
+
+@login_required(login_url='/accounts/login/')
+def help(request):
+    return render(request, 'help.html')

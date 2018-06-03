@@ -11,9 +11,9 @@ def login(request):
 
 def general_statistics(request):
     users = CustomUser.objects.all()
-    dirs_all = Directory.objects.using('directories').all()
-    dirs_classified = Directory.objects.using('directories').filter(classifications_amount=1)
-    percent = dirs_classified.__len__()/dirs_all.__len__()*100
+    dirs_all = Directory.objects.using('directories').count()
+    dirs_classified = Directory.objects.using('directories').exclude(classifications_amount=0).count()
+    percent = dirs_classified/dirs_all*100
     return render(request, 'general-stat.html', locals())
 
 
