@@ -11,7 +11,7 @@ from .forms import (
     MainForm, DirectoryForm, DirectoryItemForm
 )
 from .models import (
-    Directory, DirectoryItem, ClassifiedByRelation, RootDirectory
+    Directory, DirectoryItem, ClassifiedByRelation, RootDirectory, StatisticDirectory
 )
 from threading import Lock
 from _thread import start_new_thread
@@ -57,6 +57,37 @@ def workspace(request):
                 i.directory_class = split[1]
                 i.save(using='directories')
                 classified_by = ClassifiedByRelation(dir=i, user_id=request.user.id)
+                if i.classifications_amount == 3:
+                    stat_dir = StatisticDirectory.objects.using('directories').get(pk=int(split[0]))
+                    first_user = CustomUser.objects.get(pk=int(classified_by))
+                    second_user = CustomUser.objects.get(pk=int(stat_dir.user_id_one))
+                    third_user = CustomUser.objects.get(pk=int(stat_dir.user_id_two))
+                    if i.directory_class == stat_dir.directory_class_one:
+                        if stat_dir.directory_class_one == stat_dir.directory_class_two:
+                            first_user.quality_of_work = (first_user.quality_of_work + 1)/2
+                            second_user.quality_of_work = (second_user.quality_of_work + 1)/2
+                            third_user.quality_of_work = (third_user.quality_of_work + 1)/2
+                        else:
+                            first_user.quality_of_work = (first_user.quality_of_work + 1) / 2
+                            second_user.quality_of_work = (second_user.quality_of_work + 1) / 2
+                            third_user.quality_of_work /= 2
+                    else:
+                        if i.directory_class == stat_dir.directory_class_two:
+                            first_user.quality_of_work = (first_user.quality_of_work + 1) / 2
+                            second_user.quality_of_work /= 2
+                            third_user.quality_of_work = (third_user.quality_of_work + 1) / 2
+                        else :
+                            if stat_dir.directory_class_one == stat_dir.directory_class_two:
+                                first_user.quality_of_work /= 2
+                                second_user.quality_of_work = (second_user.quality_of_work + 1) / 2
+                                third_user.quality_of_work = (third_user.quality_of_work + 1) / 2
+                            else:
+                                first_user.quality_of_work = 0
+                                second_user.quality_of_work = 0
+                                third_user.quality_of_work = 0
+                    first_user.save()
+                    second_user.save()
+                    third_user.save()
                 try:
                     classified_by.save(using='directories')
                 except IntegrityError:
