@@ -64,6 +64,7 @@ class StatisticDirectory(models.Model):
     user_id_two = models.IntegerField(default=0)
     directory_class_two = models.TextField(default="")
     bad_photos_two = models.CharField(max_length=1024, default="")
+    is_completed = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Productivity record'

@@ -62,57 +62,58 @@ def workspace(request):
                         classified_by.save(using='directories')
                     except IntegrityError:
                         pass
-                    else:
-                        if i.classifications_amount == 2:
-                            stat_info = StatisticDirectory(dir=i,
-                                                           user_id_one=request.user.id,
-                                                           directory_class_one=split[1])
-                            try:
-                                stat_info.save(using='directories')
-                            except IntegrityError:
-                                pass
+                """elif i.classifications_amount == 2:
+                    stat_info = StatisticDirectory.objects.using('directories').get(dir=i)
+                    stat_info.user_id_one = request.user.id
+                    stat_info.directory_class_one = split[1]
+                    try:
+                        stat_info.save(using='directories')
+                    except IntegrityError:
+                        pass
+                else:
+                    stat_info = StatisticDirectory.objects.using('directories').get(dir=i)
+                    stat_info.user_id_two = request.user.id
+                    stat_info.directory_class_two = split[1]
+                    try:
+                        stat_info.save(using='directories')
+                    except IntegrityError:
+                        pass
+                    classified_by_one = ClassifiedByRelation.objects.using('directories').get(dir=i)
+                    stat_dir = StatisticDirectory.objects.using('directories').get(pk=int(split[0]))
+                    first_user = CustomUser.objects.get(pk=int(classified_by_one))
+                    second_user = CustomUser.objects.get(pk=int(stat_dir.user_id_one))
+                    third_user = CustomUser.objects.get(pk=int(stat_dir.user_id_two))
+                    if i.directory_class == stat_dir.directory_class_one:
+                        if stat_dir.directory_class_one == stat_dir.directory_class_two:
+                            first_user.quality_of_work = (first_user.quality_of_work + 1)/2
+                            second_user.quality_of_work = (second_user.quality_of_work + 1)/2
+                            third_user.quality_of_work = (third_user.quality_of_work + 1)/2
                         else:
-                            stat_info = StatisticDirectory(dir=i,
-                                                           user_id_one=request.user.id,
-                                                           directory_class_one=split[1])
-                            try:
-                                stat_info.save(using='directories')
-                            except IntegrityError:
-                                pass
-                            classified_by_one = ClassifiedByRelation.objects.get(dir=i)
-                            stat_dir = StatisticDirectory.objects.using('directories').get(pk=int(split[0]))
-                            first_user = CustomUser.objects.get(pk=int(classified_by_one))
-                            second_user = CustomUser.objects.get(pk=int(stat_dir.user_id_one))
-                            third_user = CustomUser.objects.get(pk=int(stat_dir.user_id_two))
-                            if i.directory_class == stat_dir.directory_class_one:
-                                if stat_dir.directory_class_one == stat_dir.directory_class_two:
-                                    first_user.quality_of_work = (first_user.quality_of_work + 1)/2
-                                    second_user.quality_of_work = (second_user.quality_of_work + 1)/2
-                                    third_user.quality_of_work = (third_user.quality_of_work + 1)/2
-                                else:
-                                    first_user.quality_of_work = (first_user.quality_of_work + 1) / 2
-                                    second_user.quality_of_work = (second_user.quality_of_work + 1) / 2
-                                    third_user.quality_of_work /= 2
-                            else:
-                                if i.directory_class == stat_dir.directory_class_two:
-                                    first_user.quality_of_work = (first_user.quality_of_work + 1) / 2
-                                    second_user.quality_of_work /= 2
-                                    third_user.quality_of_work = (third_user.quality_of_work + 1) / 2
-                                else :
-                                    if stat_dir.directory_class_one == stat_dir.directory_class_two:
-                                        first_user.quality_of_work /= 2
-                                        second_user.quality_of_work = (second_user.quality_of_work + 1) / 2
-                                        third_user.quality_of_work = (third_user.quality_of_work + 1) / 2
-                                    else:
-                                        first_user.quality_of_work = 0
-                                        second_user.quality_of_work = 0
-                                        third_user.quality_of_work = 0
-                            try:
-                                first_user.save()
-                                second_user.save()
-                                third_user.save()
-                            except IntegrityError:
-                                pass
+                            first_user.quality_of_work = (first_user.quality_of_work + 1) / 2
+                            second_user.quality_of_work = (second_user.quality_of_work + 1) / 2
+                            third_user.quality_of_work /= 2
+                    elif i.directory_class == stat_dir.directory_class_two:
+                        first_user.quality_of_work = (first_user.quality_of_work + 1) / 2
+                        second_user.quality_of_work /= 2
+                        third_user.quality_of_work = (third_user.quality_of_work + 1) / 2
+                    elif stat_dir.directory_class_one == stat_dir.directory_class_two:
+                        first_user.quality_of_work /= 2
+                        second_user.quality_of_work = (second_user.quality_of_work + 1) / 2
+                        third_user.quality_of_work = (third_user.quality_of_work + 1) / 2
+                    else:
+                        first_user.quality_of_work = 0
+                        second_user.quality_of_work = 0
+                        third_user.quality_of_work = 0
+                        first_user.quality_of_work /= 2
+                        second_user.quality_of_work /= 2
+                        third_user.quality_of_work /= 2
+                        print("%d dir differently classified by '%s', '%s', '%s'!" % (stat_dir.dir_id, first_user.id, second_user.id, third_user.id))
+                    try:
+                        first_user.save()
+                        second_user.save()
+                        third_user.save()
+                    except IntegrityError:
+                        pass"""
             except KeyError:
                 continue
         CustomUser.update_user_number_of_sorted_folders(request.user)
@@ -126,10 +127,19 @@ def workspace(request):
             pass
         lock.release()
         return redirect('/workspace/')
-    dir_list = QuerySet()
     dir_list = Directory.objects.using('directories').filter(is_busy=request.user.id)
-    if dir_list.__len__() < MAX_DIRECTORIES:
-        dir_list = (dir_list | (Directory.objects.using('directories').filter(is_busy=0, classifications_amount=0)))[:MAX_DIRECTORIES]
+    shared_folder = Directory.objects.none()
+    """if dir_list.exclude(classifications_amount=0).__len__() == 0:
+        shared_folder_id = StatisticDirectory.objects.using('directories').filter(is_completed=False).exclude(user_id_one=request.user.id).exclude(user_id_two=request.user.id)
+        for j in shared_folder_id:
+            try:
+                tmp = ClassifiedByRelation.objects.using('directories').get(dir_id=j.dir_id)
+                if tmp.user_id != request.user.id:
+                    shared_folder = Directory.objects.using('directories').filter(is_busy=0, id=j.dir_id)
+                    break
+            except ObjectDoesNotExist:
+                continue"""
+    dir_list = (dir_list | shared_folder | (Directory.objects.using('directories').filter(is_busy=0, classifications_amount=0)))[:MAX_DIRECTORIES]
     dir_forms = list()
     dir_forms.clear()
     for directory in dir_list:
@@ -144,7 +154,8 @@ def workspace(request):
     main_form.dir_forms = dir_forms.copy()
     main_form.user_id.clear()
     main_form.user_id.append(request.user.id)
-    dictionary = dict(main_form=locals()['main_form'], root_dir=locals()['root_dir'], thumb_dir=locals()['thumb_dir'])
+    dictionary = {'main_form': main_form, 'root_dir': root_dir, 'thumb_dir': thumb_dir}
+    # dictionary = dict(main_form=locals()['main_form'], root_dir=locals()['root_dir'], thumb_dir=locals()['thumb_dir'])
     ret_val = render(request, 'main.html', dictionary)
     lock.release()
     return ret_val
@@ -193,6 +204,5 @@ def password_edit(request):
     return render(request, 'password_edit.html', {'form': form})
 
 
-@login_required(login_url='/accounts/login/')
 def help(request):
     return render(request, 'help.html')
