@@ -55,6 +55,9 @@
             </div>
         </nav>
          <i class="fa fa-question-circle fa-2x help" onclick="showModel()"></i>
+        {% if main_form.empty %}
+
+        {% else %}
         <form method="post" action="#">
         {% csrf_token %}
             <div class="normalPadding">
@@ -137,6 +140,7 @@
             </div>
             </div>
                 </form>
+        {% endif %}
             <div class="modal" id="elem">
       <div class="modal-content">
         <div class="pull-right">

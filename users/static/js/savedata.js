@@ -130,7 +130,7 @@ window.onload = function() {
 
 	var imgammount = localStorage.getItem("imgammount");
 	var foldersImgAmmount =  JSON.parse(localStorage.getItem("foldersImgAmmount"));*/
-
+	foldersImgAmmount = (document.getElementsByClassName("funkyradio").length) * 2;
 	var radioArr = [];
 	radioArr =  JSON.parse(localStorage.getItem("radioArr"));
 	if(radioArr!=null)

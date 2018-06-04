@@ -4,7 +4,6 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models.query import QuerySet
 from django.db.utils import IntegrityError
 from users.models import CustomUser
 from .forms import (
@@ -13,6 +12,7 @@ from .forms import (
 from .models import (
     Directory, DirectoryItem, ClassifiedByRelation, RootDirectory, StatisticDirectory
 )
+import journal
 from threading import Lock
 from _thread import start_new_thread
 from regeneratedb import regeneration_thread
@@ -115,13 +115,11 @@ def workspace(request):
                         stat_dir.save(using='directories')
                         classified_by_one.save(using='directories')
                     else:
-                        first_user.quality_of_work = 0
-                        second_user.quality_of_work = 0
-                        third_user.quality_of_work = 0
                         first_user.quality_of_work /= 2
                         second_user.quality_of_work /= 2
                         third_user.quality_of_work /= 2
-                        print("%d dir differently classified by '%s', '%s', '%s'!" % (stat_dir.dir_id, first_user.id, second_user.id, third_user.id))
+                        journal.log_message("Dir %s(%d) differently classified by '%s', '%s', '%s'!\n" % (i.path, stat_dir.dir_id, first_user.username, second_user.username, third_user.username))
+                        journal.log_to_file("bad-folders.log", "Dir %s(%d) differently classified by '%s', '%s', '%s'!\n" % (i.path, stat_dir.dir_id, first_user.username, second_user.username, third_user.username))
                     try:
                         first_user.save()
                         second_user.save()
@@ -159,6 +157,8 @@ def workspace(request):
                     continue
                 break
     dir_list = (dir_list | shared_folder | (Directory.objects.using('directories').filter(is_busy=0, classifications_amount=0)))[:MAX_DIRECTORIES]
+    if dir_list.__len__() == shared_folder.__len__():
+        dir_list.clear()
     dir_forms = list()
     dir_forms.clear()
     for directory in dir_list:

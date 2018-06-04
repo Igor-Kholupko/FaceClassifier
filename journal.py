@@ -18,3 +18,9 @@ def log_date_time_string():
 
 def log_message(format, *args):
     sys.stderr.write(" - - [%s] %s\n" % (log_date_time_string(), format % args))
+
+
+def log_to_file(filename, format, *args):
+    file = open(filename, "a")
+    file.write(" - - [%s] %s" % (log_date_time_string(), format % args))
+    file.close()
