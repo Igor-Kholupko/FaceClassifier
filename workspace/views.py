@@ -62,10 +62,13 @@ def workspace(request):
                         classified_by.save(using='directories')
                     except IntegrityError:
                         pass
-                """elif i.classifications_amount == 2:
+                elif i.classifications_amount == 2:
                     stat_info = StatisticDirectory.objects.using('directories').get(dir=i)
                     stat_info.user_id_one = request.user.id
                     stat_info.directory_class_one = split[1]
+                    i.is_busy = 0
+
+                    i.save(using='directories')
                     try:
                         stat_info.save(using='directories')
                     except IntegrityError:
@@ -74,13 +77,16 @@ def workspace(request):
                     stat_info = StatisticDirectory.objects.using('directories').get(dir=i)
                     stat_info.user_id_two = request.user.id
                     stat_info.directory_class_two = split[1]
+                    stat_info.is_completed = True
+                    i.is_busy = 0
+                    i.save(using='directories')
                     try:
                         stat_info.save(using='directories')
                     except IntegrityError:
                         pass
                     classified_by_one = ClassifiedByRelation.objects.using('directories').get(dir=i)
-                    stat_dir = StatisticDirectory.objects.using('directories').get(pk=int(split[0]))
-                    first_user = CustomUser.objects.get(pk=int(classified_by_one))
+                    stat_dir = StatisticDirectory.objects.using('directories').get(dir_id=int(split[0]))
+                    first_user = CustomUser.objects.get(pk=int(classified_by_one.user_id))
                     second_user = CustomUser.objects.get(pk=int(stat_dir.user_id_one))
                     third_user = CustomUser.objects.get(pk=int(stat_dir.user_id_two))
                     if i.directory_class == stat_dir.directory_class_one:
@@ -100,6 +106,14 @@ def workspace(request):
                         first_user.quality_of_work /= 2
                         second_user.quality_of_work = (second_user.quality_of_work + 1) / 2
                         third_user.quality_of_work = (third_user.quality_of_work + 1) / 2
+                        prev_class = i.directory_class
+                        i.directory_class = stat_dir.directory_class_one
+                        stat_dir.directory_class_one = prev_class
+                        classified_by_one.user_id = second_user.id
+                        stat_dir.user_id_one = first_user.id
+                        i.save(using='directories')
+                        stat_dir.save(using='directories')
+                        classified_by_one.save(using='directories')
                     else:
                         first_user.quality_of_work = 0
                         second_user.quality_of_work = 0
@@ -113,7 +127,7 @@ def workspace(request):
                         second_user.save()
                         third_user.save()
                     except IntegrityError:
-                        pass"""
+                        pass
             except KeyError:
                 continue
         CustomUser.update_user_number_of_sorted_folders(request.user)
@@ -129,16 +143,21 @@ def workspace(request):
         return redirect('/workspace/')
     dir_list = Directory.objects.using('directories').filter(is_busy=request.user.id)
     shared_folder = Directory.objects.none()
-    """if dir_list.exclude(classifications_amount=0).__len__() == 0:
+    if dir_list.exclude(classifications_amount=0).__len__() == 0:
         shared_folder_id = StatisticDirectory.objects.using('directories').filter(is_completed=False).exclude(user_id_one=request.user.id).exclude(user_id_two=request.user.id)
         for j in shared_folder_id:
             try:
                 tmp = ClassifiedByRelation.objects.using('directories').get(dir_id=j.dir_id)
-                if tmp.user_id != request.user.id:
-                    shared_folder = Directory.objects.using('directories').filter(is_busy=0, id=j.dir_id)
-                    break
             except ObjectDoesNotExist:
-                continue"""
+                shared_folder = Directory.objects.using('directories').filter(is_busy=0, id=j.dir_id)
+                if shared_folder.__len__() == 0:
+                    continue
+                break
+            if tmp.user_id != request.user.id:
+                shared_folder = Directory.objects.using('directories').filter(is_busy=0, id=j.dir_id)
+                if shared_folder.__len__() == 0:
+                    continue
+                break
     dir_list = (dir_list | shared_folder | (Directory.objects.using('directories').filter(is_busy=0, classifications_amount=0)))[:MAX_DIRECTORIES]
     dir_forms = list()
     dir_forms.clear()
@@ -204,6 +223,7 @@ def password_edit(request):
     return render(request, 'password_edit.html', {'form': form})
 
 
+@login_required(login_url='/accounts/login/')
 def help(request):
     return render(request, 'help.html')
 

@@ -1,6 +1,7 @@
 from django.core.exceptions import AppRegistryNotReady
 from django.conf import settings
 from time import sleep
+from journal import log_message
 
 
 def release_directories(user_id=0):
@@ -25,4 +26,4 @@ def regeneration_thread():
                     release_directories(user.id)
         except ModuleNotFoundError or AppRegistryNotReady:
             continue
-        print("DATABASE REGENERATION")
+        log_message("DATABASE REGENERATION")

@@ -93,7 +93,12 @@ class FaceClassifierManagementUtility(ManagementUtility):
         elif subcommand == 'version' or self.argv[1:] == ['--version']:
             sys.stdout.write(django.get_version() + '\n')
         elif subcommand == 'importdirs' or subcommand == '--importdirs':
-            populate_db(settings.ROOT_DIRECTORY, settings.THUMBNAILS_DIRECTORIES, args[0] == '--check')
+            check = False
+            try:
+                check = args[0] == '--check'
+            except IndexError:
+                pass
+            populate_db(settings.ROOT_DIRECTORY, settings.THUMBNAILS_DIRECTORIES, check)
         elif self.argv[1:] in (['--help'], ['-h']):
             sys.stdout.write(self.main_help_text() + '\n')
         else:

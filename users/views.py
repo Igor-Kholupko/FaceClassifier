@@ -1,5 +1,4 @@
-from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.shortcuts import render, get_object_or_404
 from workspace.models import Directory, ClassifiedByRelation
 from .models import CustomUser
