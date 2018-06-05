@@ -29,6 +29,7 @@ def populate_db(root_directory_path=None, thumb_directories=None, check=False):
     sys.stdout.write("Start importing from \"%s\".\n\n" % root_directory_path)
     dirs_amount = root_directory_content.__len__()
     global counter
+    thumbnails_full_path = os.path.join(os.path.dirname(root_directory_path), thumb_directories[1])
     for counter, i in enumerate(root_directory_content):
         directory = Directory(root_dir=root_directory, path=i)
         try:
@@ -38,9 +39,17 @@ def populate_db(root_directory_path=None, thumb_directories=None, check=False):
             for photos_counter, j in enumerate(directory_content):
                 directory_item = DirectoryItem(dir=directory, name=j, is_bad=False)
                 directory_item.save(using="directories")
-            sys.stdout.write("[%d] : '%s' imported (%d photos).\n" % (counter+1, i, photos_counter+1))
+            if os.listdir(os.path.join(thumbnails_full_path, directory.path)).__len__() == 0:
+                directory.classifications_amount = 1
+                directory.directory_class = "TrashFolder"
+                directory.save(using="directories")
+                sys.stdout.write("[%d] : '%s' was empty.\n" % (counter+1, i))
+            else:
+                sys.stdout.write("[%d] : '%s' imported (%d photos).\n" % (counter+1, i, photos_counter+1))
             if (counter+1) % 10 == 0:
                 directory_clone = StatisticDirectory(dir=directory)
+                if os.listdir(os.path.join(thumbnails_full_path, directory.path)).__len__() == 0:
+                    directory_clone.is_completed = True
                 directory_clone.save(using='directories')
         except IntegrityError:
             dirs_amount -= 1
