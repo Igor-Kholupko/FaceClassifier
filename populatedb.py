@@ -39,18 +39,24 @@ def populate_db(root_directory_path=None, thumb_directories=None, check=False):
             for photos_counter, j in enumerate(directory_content):
                 directory_item = DirectoryItem(dir=directory, name=j, is_bad=False)
                 directory_item.save(using="directories")
-            if os.listdir(os.path.join(thumbnails_full_path, directory.path)).__len__() == 0:
-                directory.classifications_amount = 1
-                directory.directory_class = "TrashFolder"
-                directory.save(using="directories")
-                sys.stdout.write("[%d] : '%s' was empty.\n" % (counter+1, i))
-            else:
-                sys.stdout.write("[%d] : '%s' imported (%d photos).\n" % (counter+1, i, photos_counter+1))
-            if (counter+1) % 10 == 0:
-                directory_clone = StatisticDirectory(dir=directory)
+            try:
                 if os.listdir(os.path.join(thumbnails_full_path, directory.path)).__len__() == 0:
-                    directory_clone.is_completed = True
-                directory_clone.save(using='directories')
+                    directory.classifications_amount = 1
+                    directory.directory_class = "TrashFolder"
+                    directory.save(using="directories")
+                    sys.stdout.write(" - - [%d] : '%s' was empty.\n" % (counter+1, i))
+                else:
+                    sys.stdout.write("[%d] : '%s' imported (%d photos).\n" % (counter+1, i, photos_counter+1))
+                if (counter+1) % 10 == 0:
+                    directory_clone = StatisticDirectory(dir=directory)
+                    if os.listdir(os.path.join(thumbnails_full_path, directory.path)).__len__() == 0:
+                        directory_clone.is_completed = True
+                    directory_clone.save(using='directories')
+            except FileNotFoundError:
+                    directory.classifications_amount = 1
+                    directory.directory_class = "TrashFolder"
+                    directory.save(using="directories")
+                    sys.stdout.write(" - - [%d] : '%s' thumbnails folder missed.\n" % (counter+1, i))
         except IntegrityError:
             dirs_amount -= 1
             continue

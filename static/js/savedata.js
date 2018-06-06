@@ -115,6 +115,60 @@ function GetData (item) {
 }
 
 function clickToImage(elem){
+
+	var checkBoxElem = document.getElementById(elem.getAttribute("name")); // checkbox
+	if(checkBoxElem.disabled == true ){
+		
+		var filepathIdFolder = checkBoxElem.getAttribute("filePathId"); // folder id 
+
+		var inputs = document.getElementsByTagName('input'); // all inputs
+		var radioArr = [];
+		radioArr =  JSON.parse(localStorage.getItem("radioArr"));	// radiobuttons arr
+		if(radioArr==null)	radioArr = [];
+
+		var checkBoxDisabledArr = [];
+		checkBoxDisabledArr =   JSON.parse(localStorage.getItem("checkBoxDisabledArr"));
+		if(checkBoxDisabledArr==null)	checkBoxDisabledArr = [];
+
+		var chekboxArr = [];
+		chekboxArr =  JSON.parse(localStorage.getItem("chekboxArr"));	
+		if(chekboxArr==null) chekboxArr = [];
+
+		// deleting radio buttn check
+		for(var i = 0; i < inputs.length; i++) {
+		    if(inputs[i].type.toLowerCase() == 'radio') {
+
+		        if(inputs[i].getAttribute("radioGroupId")==filepathIdFolder && inputs[i].checked==true){
+		        	inputs[i].checked = false;
+		        	if(radioArr!=null && radioArr.indexOf(filepathIdFolder)!=-1 ) radioArr.splice(radioArr.indexOf(filepathIdFolder),2);
+		        }
+		    }
+		    else if(inputs[i].type.toLowerCase() == 'checkbox') {
+		    	if(inputs[i].getAttribute("filePathId")==filepathIdFolder && checkBoxDisabledArr.indexOf(inputs[i].getAttribute("id"))!=-1){
+		    		checkBoxDisabledArr.splice(checkBoxDisabledArr.indexOf(inputs[i].getAttribute("id")),1);
+		    		inputs[i].disabled = false;	  
+		    		if(chekboxArr.indexOf(inputs[i].getAttribute("id"))!=-1){
+ 						document.getElementsByName(inputs[i].getAttribute("id"))[0].classList.add('checking');
+ 						inputs[i].checked= true;
+		    		}  				    		
+		    	}
+		    	
+		    }
+		}
+		document.getElementById(elem.getAttribute("name")).checked = false;
+		if(elem.classList.contains('checking')==true) elem.classList.remove('checking'); // для обработчика нажатия на это изображения нужно удалить.
+		localStorage.setItem("radioArr", JSON.stringify(radioArr));
+		localStorage.setItem("checkBoxDisabledArr", JSON.stringify(radioArr));
+		localStorage.setItem("chekboxArr", JSON.stringify(chekboxArr));
+
+		document.getElementById("btnNext").disabled = true;
+			if(document.getElementById("btnNext").classList.contains('btn-primary')){
+				document.getElementById("btnNext").classList.remove('btn-primary');	
+				document.getElementById("btnNext").classList.add('btn-secondary');
+		}
+
+	}
+
 	if(document.getElementById(elem.getAttribute("name"))!=null && document.getElementById(elem.getAttribute("name")).disabled==false){
 		if(elem.classList.contains('checking')==false)
 				elem.classList.add('checking');
