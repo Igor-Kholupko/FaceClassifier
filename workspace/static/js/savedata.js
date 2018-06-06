@@ -2,20 +2,15 @@ var foldersImgAmmount = 20 ; // folders ammount * 2
 
 function loginBut()
 {
-	console.log("loginbtnm");
 	localStorage.removeItem("chekboxArr");
 	localStorage.removeItem("radioArr");
 	localStorage.removeItem("checkBoxDisabledArr");
-/*	localStorage.removeItem("foldersImgAmmount");
-	localStorage.removeItem("imgammount");*/
-	console.log("login");
-     window.location = "main.html"
 }
 
 function SetData (elem) {
 	var folderId = elem.getAttribute('radioGroupId');
 	var radioArr = [];
-	radioArr =  JSON.parse(localStorage.getItem("radioArr"));
+	radioArr =  JSON.parse(localStorage.getItem("radioArr"));	
 	if(radioArr==null)	radioArr = [];
 
 /*	radioArr[elem.getAttribute('radioGroupId')] = elem.getAttribute('id');*/
@@ -32,7 +27,7 @@ function SetData (elem) {
 	if(radioArr.length==foldersImgAmmount) {
 		document.getElementById("btnNext").disabled = false;
 		if(document.getElementById("btnNext").classList.contains('btn-secondary')){
-			document.getElementById("btnNext").classList.remove('btn-secondary');
+			document.getElementById("btnNext").classList.remove('btn-secondary');	
 			document.getElementById("btnNext").classList.add('btn-primary');
 		}
 	}
@@ -40,6 +35,7 @@ function SetData (elem) {
 	var x = document.getElementsByName("checkbox"); // maybe updated
 
 	if(elem.getAttribute('btnType')>0 && elem.getAttribute('btnType')<=3){
+		disableGroupBoxRight(folderId);
 		for (var i = 0; i < x.length; i++) {
 			if(x[i].getAttribute('filePathId')==folderId){
 				x[i].checked = false;
@@ -55,12 +51,12 @@ function SetData (elem) {
 	else{
 		// load all from local data of browser
 		var chekboxArr = [];
-		chekboxArr =  JSON.parse(localStorage.getItem("chekboxArr"));
+		chekboxArr =  JSON.parse(localStorage.getItem("chekboxArr"));	
 		if(chekboxArr!=null) {
 			for (var i = 0 ; i < chekboxArr.length; i++ ) {
 	 			if(document.getElementById(chekboxArr[i])!=null && chekboxArr[i]!=null && document.getElementById(chekboxArr[i]).getAttribute('filePathId')==folderId ){
 	 				document.getElementById(chekboxArr[i]).checked = true;
-	 			}
+	 			}	 
 			}
 		}
 
@@ -77,7 +73,7 @@ function SetData (elem) {
 	}
 	updateCheckBoxDisabled(x);
 
-}
+} 
 
 function updateCheckBoxDisabled(elem){
 
@@ -86,8 +82,8 @@ function updateCheckBoxDisabled(elem){
 	if(checkBoxDisabledArr==null)	checkBoxDisabledArr = [];
 	for (var i = 0; i < elem.length; i++) {
 		if(elem[i].disabled) {
-			if(checkBoxDisabledArr.indexOf(elem[i].getAttribute('id')) == -1) checkBoxDisabledArr.push(elem[i].getAttribute('id'));
-		}
+			if(checkBoxDisabledArr.indexOf(elem[i].getAttribute('id')) == -1) checkBoxDisabledArr.push(elem[i].getAttribute('id'));	
+		}	
 		else {
 			if(checkBoxDisabledArr.indexOf(elem[i].getAttribute('id')) != -1) checkBoxDisabledArr.splice(checkBoxDisabledArr.indexOf(elem[i].getAttribute('id')), 1);
 		}
@@ -102,28 +98,28 @@ function SetCheckBox (elem) {
 	chekboxArr =   JSON.parse(localStorage.getItem("chekboxArr"));
 	if(chekboxArr==null)	chekboxArr = [];
 	if(elem.checked) {
-		if(chekboxArr.indexOf(elem.getAttribute('id')) == -1) chekboxArr.push(elem.getAttribute('id'));
-	}
+		if(chekboxArr.indexOf(elem.getAttribute('id')) == -1) chekboxArr.push(elem.getAttribute('id'));	
+	}	
 	else {
-		if(chekboxArr.indexOf(elem.getAttribute('id')) != -1) {
+		if(chekboxArr.indexOf(elem.getAttribute('id')) != -1) {			
 			chekboxArr.splice(chekboxArr.indexOf(elem.getAttribute('id')), 1);
 		}
 	}
 
 	localStorage.setItem("chekboxArr", JSON.stringify(chekboxArr));
-}
+} 
 
 
-function GetData (item) {
-    return localStorage.getItem(item);
+function GetData (item) { 
+    return localStorage.getItem(item); 
 }
 
 function clickToImage(elem){
 
 	var checkBoxElem = document.getElementById(elem.getAttribute("name")); // checkbox
+	var filepathIdFolder = checkBoxElem.getAttribute("filePathId"); // folder id 
+	
 	if(checkBoxElem.disabled == true ){
-		
-		var filepathIdFolder = checkBoxElem.getAttribute("filePathId"); // folder id 
 
 		var inputs = document.getElementsByTagName('input'); // all inputs
 		var radioArr = [];
@@ -165,6 +161,7 @@ function clickToImage(elem){
 		localStorage.setItem("checkBoxDisabledArr", JSON.stringify(radioArr));
 		localStorage.setItem("chekboxArr", JSON.stringify(chekboxArr));
 
+		activateGroupBoxRight(filepathIdFolder);
 		document.getElementById("btnNext").disabled = true;
 			if(document.getElementById("btnNext").classList.contains('btn-primary')){
 				document.getElementById("btnNext").classList.remove('btn-primary');	
@@ -174,11 +171,78 @@ function clickToImage(elem){
 	}
 
 	if(document.getElementById(elem.getAttribute("name"))!=null && document.getElementById(elem.getAttribute("name")).disabled==false){
-		if(elem.classList.contains('checking')==false)
-				elem.classList.add('checking');
-		else 	elem.classList.remove('checking');
+		if(elem.classList.contains('checking')==false){
+			elem.classList.add('checking');
+			activateGroupBoxRight(filepathIdFolder);
+		}	
+		else 	{
+			elem.classList.remove('checking');
+
+			// check if it was the last img that was checked in folder
+			var somethinkCheked=0;
+
+			var inputs = document.getElementsByTagName('input'); // all inputs
+			for(var i = 0; i < inputs.length; i++){
+				 if(inputs[i].type.toLowerCase() == 'checkbox')
+				 	if(inputs[i].getAttribute("filePathId")==filepathIdFolder && inputs[i].checked==true) {somethinkCheked+=1;}
+			}
+			// if we couldnt find checked images
+			if(somethinkCheked==1){
+				var radioArr = [];
+				radioArr =  JSON.parse(localStorage.getItem("radioArr"));	// radiobuttons arr
+				if(radioArr==null)	radioArr = [];
+
+				for(var i = 0; i < inputs.length; i++) {
+				    if(inputs[i].type.toLowerCase() == 'radio') {
+				        if(inputs[i].getAttribute("radioGroupId")==filepathIdFolder && inputs[i].checked==true){
+				        	inputs[i].checked = false;
+				        	if(radioArr!=null && radioArr.indexOf(filepathIdFolder)!=-1 ) radioArr.splice(radioArr.indexOf(filepathIdFolder),2);
+				        }
+
+				    }
+				}
+				disableGroupBoxRight(filepathIdFolder);
+				localStorage.setItem("radioArr", JSON.stringify(radioArr));
+				document.getElementById("btnNext").disabled = true;
+				if(document.getElementById("btnNext").classList.contains('btn-primary')){
+					document.getElementById("btnNext").classList.remove('btn-primary');	
+					document.getElementById("btnNext").classList.add('btn-secondary');
+				}
+			}
+
+
+		}
 	}
 
+}
+function activateGroupBoxRight(radioGroupId){
+	var inputs = document.getElementsByTagName('input'); // all inputs
+	for(var i = 0; i < inputs.length; i++) {
+	    if(inputs[i].type.toLowerCase() == 'radio') {
+	    	if(inputs[i].getAttribute("radioGroupId")==radioGroupId && inputs[i].getAttribute("btnType")>3 ){
+	    		if(inputs[i].disabled == true) {
+	    			inputs[i].disabled=false;
+	    			if(inputs[i].nextElementSibling.classList.contains('disabledCheckBox'))
+	    				inputs[i].nextElementSibling.classList.remove('disabledCheckBox');		    			
+	    		}
+	    	}
+	    }
+	}
+}
+
+function disableGroupBoxRight(radioGroupId){
+	var inputs = document.getElementsByTagName('input'); // all inputs
+	for(var i = 0; i < inputs.length; i++) {
+	    if(inputs[i].type.toLowerCase() == 'radio') {
+	    	if(inputs[i].getAttribute("radioGroupId")==radioGroupId && inputs[i].getAttribute("btnType")>3 ){
+	    		inputs[i].disabled = true;
+
+	    		if(inputs[i].nextElementSibling.classList.contains('disabledCheckBox')==false){	
+				inputs[i].nextElementSibling.classList.add('disabledCheckBox');
+				}
+	    	}
+	    }
+	}
 }
 
 
@@ -186,12 +250,13 @@ window.onload = function() {
 /*	localStorage.setItem("foldersImgAmmount", JSON.stringify([10,8])); // только для теста массив папок с количеством изображений в них
 	localStorage.setItem("imgammount", 18 ); // только для теста  сколько всего изображений
 
-	var imgammount = localStorage.getItem("imgammount");
+	var imgammount = localStorage.getItem("imgammount"); 
 	var foldersImgAmmount =  JSON.parse(localStorage.getItem("foldersImgAmmount"));*/
-	foldersImgAmmount = (document.getElementsByClassName("funkyradio").length) * 2;
+	foldersImgAmmount= (document.getElementsByClassName("funkyradio").length) * 2;
+
 	var radioArr = [];
-	radioArr =  JSON.parse(localStorage.getItem("radioArr"));
-	if(radioArr!=null)
+	radioArr =  JSON.parse(localStorage.getItem("radioArr"));	
+	if(radioArr!=null) 
 		for (var i = 0 ; i < radioArr.length; i++ ) {
 			 if(document.getElementById(radioArr[i])!=null)
 			 document.getElementById(radioArr[i]).checked = true;
@@ -200,11 +265,11 @@ window.onload = function() {
 		if(radioArr.length==foldersImgAmmount){
 			document.getElementById("btnNext").disabled = false;
 			if(document.getElementById("btnNext").classList.contains('btn-secondary')){
-				document.getElementById("btnNext").classList.remove('btn-secondary');
+				document.getElementById("btnNext").classList.remove('btn-secondary');	
 				document.getElementById("btnNext").classList.add('btn-primary');
 			}
 		}
-
+		
 	}
 
 	var chekboxArr = [];
@@ -238,5 +303,27 @@ window.onload = function() {
 			 
 		}
 	}
+
+	var disableRadioButtonsGroups = [];
+	var activeRadioButtonsGroups = [];
+
+	var inputs = document.getElementsByTagName('input'); // all inputs
+	for(var i = 0; i < inputs.length; i++) {
+	    if(inputs[i].type.toLowerCase() == 'checkbox') {
+	    	if(inputs[i].checked == true ){
+	    			if(activeRadioButtonsGroups.indexOf(inputs[i].getAttribute("filePathId"))==-1 ) activeRadioButtonsGroups.push(inputs[i].getAttribute("filePathId"));
+	    			if(disableRadioButtonsGroups.indexOf(inputs[i].getAttribute("filePathId"))!=-1) disableRadioButtonsGroups.splice(inputs[i].getAttribute("filePathId"),1);
+	    	}
+		    else{
+		    	if(activeRadioButtonsGroups.indexOf(inputs[i].getAttribute("filePathId"))==-1 && (disableRadioButtonsGroups.indexOf(inputs[i].getAttribute("filePathId"))==-1))
+		    		disableRadioButtonsGroups.push(inputs[i].getAttribute("filePathId"));
+		    }
+	    }
+	}
+	console.log(disableRadioButtonsGroups + "  disabled : active ->" + activeRadioButtonsGroups);
+	for(var i =0 ; i< disableRadioButtonsGroups.length;i++){
+		disableGroupBoxRight(disableRadioButtonsGroups[i]);
+	}
+
 
 }
