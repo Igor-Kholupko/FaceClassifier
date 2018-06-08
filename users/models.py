@@ -11,6 +11,8 @@ class CustomUser(AbstractUser):
     last_activity = models.DateTimeField(default=timezone.now)
     quality_of_work = models.DecimalField(default=1.0, max_digits=5, decimal_places=4)
     number_of_sorted_folders_at_a_time = models.PositiveSmallIntegerField(default=0)
+    last_main_get_request = models.TimeField(default=timezone.datetime(year=1980, month=1, day=1, hour=0, minute=0, second=0))
+    average_folder_time = models.DurationField(default=timezone.timedelta(microseconds=0))
 
     def __str__(self):
         return self.username
@@ -30,6 +32,10 @@ class CustomUser(AbstractUser):
         num = ClassifiedByRelation.objects.using('directories').filter(user_id=user.id).__len__()
         CustomUser.objects.update_or_create(id=user.id,
                                             defaults={'number_of_sorted_folders': num})
+
+    @staticmethod
+    def update_last_main_get_request(user):
+        CustomUser.objects.update_or_create(id=user.id, defaults={'last_main_get_request': timezone.now().time()})
 
     @staticmethod
     def update_user_activity(user):

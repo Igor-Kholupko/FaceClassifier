@@ -5,6 +5,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.utils import IntegrityError
+from django.utils import timezone
 from users.models import CustomUser
 from .forms import (
     MainForm, DirectoryForm, DirectoryItemForm
@@ -47,11 +48,14 @@ def workspace(request):
         pass
     main_form = MainForm()
     if request.method == "POST":
+        time_moment = timezone.timedelta(hours=timezone.now().time().hour, minutes=timezone.now().time().minute, seconds=timezone.now().second)
         d = dict(request.POST)
+        dirs_counter = 0
         for i in range(1, MAX_DIRECTORIES+1):
             try:
                 split = re.split("[_\s]", d[("radio_%d" % i)][0])
                 i = Directory.objects.using('directories').get(pk=int(split[0]))
+                dirs_counter += 1
                 i.classifications_amount += 1
                 if i.classifications_amount == 1:
                     i.is_busy = 0
@@ -129,6 +133,14 @@ def workspace(request):
             except KeyError:
                 continue
         CustomUser.update_user_number_of_sorted_folders(request.user)
+        user = CustomUser.objects.get(id=request.user.id)
+        if user.average_folder_time == 0:
+            user.average_folder_time = (time_moment - user.last_main_get_request)/dirs_counter
+        else:
+            user.average_folder_time = ((time_moment - timezone.timedelta(hours=user.last_main_get_request.hour,
+                                                                         minutes=user.last_main_get_request.minute,
+                                                                         seconds=user.last_main_get_request.second))/dirs_counter + user.average_folder_time)/2
+        user.save()
         try:
             checkboxes = d['checkbox']
             for i in checkboxes:
@@ -177,6 +189,7 @@ def workspace(request):
     # dictionary = dict(main_form=locals()['main_form'], root_dir=locals()['root_dir'], thumb_dir=locals()['thumb_dir'])
     ret_val = render(request, 'main.html', dictionary)
     lock.release()
+    CustomUser.update_last_main_get_request(request.user)
     return ret_val
 
 
