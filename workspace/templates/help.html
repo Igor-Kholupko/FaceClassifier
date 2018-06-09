@@ -4,23 +4,29 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{% block title %}Sort Photos{% endblock %}</title>
-    {% load static %}
 
-	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
-	<link rel="stylesheet" href="{% static 'css/main.css'%}">
-    <link rel="stylesheet" href="{% static 'css/statistics.css'%}">
-    <link rel="stylesheet" href="{% static 'css/gallery-grid.css'%}"> <!-- может быть без этого ? -->
-    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css'%}">
+    {% load static %}
+	<link rel="stylesheet" href="{% static 'css/bootstrap-responsive.css' %}">
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/main.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css/gallery-grid.css' %}"> <!-- может быть без этого ? -->
+    <link rel="stylesheet" href="{% static 'css/baguetteBox.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+
+	<script src="{% static 'js/gallery-grid.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>	
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
 
 </head>
 {% block content %}
-    <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+<body>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		    <span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarNav">
+		    <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="navbar-brand" href="{% url 'log_general_statistics' %}">Folder viewer</a>
                 </li>
@@ -36,11 +42,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Exit</a>
                 </li>
-            </ul>
-        </div>
-    </nav>
-    .
-	<div class="normalPaddingStatPage">
+		    </ul>
+		  </div>
+		</nav>
+
+	</div>
+	</div>
+	</div>
+
+	<div class="normalPaddingHelp">
 		<div class="container gallery-container">
 			<section class="section">
                 <div class="section-inner">
@@ -50,68 +60,206 @@
 							<p>
 								This web-site designed for sorting photos of each person.<br>
 								Firstly we can see the name of sorted folder, than photos in it and six radiobuttons to choose.<br>
-								You should click on photos you want to remove if they suit to Extra or Not lg or center or Trash images and choose correct radiobutton.<br>
+								You should click on photos you want to remove if they suit to Extra or Label and choose correct radiobutton.<br> 
 								Here is a table with description of each of them:
 							</p>
 						</div>
 						<hr>
 						<table class="table table-reflow table-hover table-striped">
-						    <thead>
-						        <tr>
-						        <th>Radiobutton</th>
-						        <th>Description</th>
-						        <th>Click on photos</th>
+						  <thead>
+						    <tr>
+						      <th>Radiobutton</th>
+						      <th>Description</th>
+						      <th>Click on photos</th>
 						    </tr>
-						    </thead>
-                                <tbody>
-                                    <tr>
-                                    <th scope="row">Normal</th>
-                                    <td>The folder contains photos<br>of the same person.</td>
-                                    <td><i class="fa fa-minus not-online"></i></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Multiple</th>
-                                    <td>The folder contains photos of several<br>people but no one prevails.</td>
-                                    <td><i class="fa fa-minus not-online"></i></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Trash folder</th>
-                                    <td>The folder contains random photos and<br>there are no people on them.</td>
-                                    <td><i class="fa fa-minus not-online"></i></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Not lg or center</th>
-                                    <td>The folder contains photos of several<br>people and the main person<br>is't in the center.</td>
-                                    <td><i class="fa fa-check online"></i></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Extra</th>
-                                    <td>The folder contains photos of several<br>people but one of them prevails.</td>
-                                    <td><i class="fa fa-check online"></i></td>
-                                </tr>
-                                <tr>
-						            <th scope="row">Trash images</th>
-						            <td>The folder contains trash(blurry) photos.</td>
-						            <td><i class="fa fa-check online"></i></td>
-						        </tr>
-						    </tbody>
+						  </thead>
+						  <tbody>
+						    <tr>
+						      <th scope="row">Normal</th>
+						      <td>The folder contains photos<br>of the same person.</td>
+						      <td><i class="fa fa-minus not-online"></i></td>
+						    </tr>
+						    <tr>
+						      <th scope="row">Multiple</th>
+						      <td>The folder contains photos of several<br>people but no one prevails.</td>
+						      <td><i class="fa fa-minus not-online"></i></td>
+						    </tr>
+						    <tr>
+						      <th scope="row">Trash folder</th>
+						      <td>The folder contains random photos and<br>there are no people on them.</td>
+						      <td><i class="fa fa-minus not-online"></i></td>
+						    </tr>
+
+						    <tr>
+						      <th scope="row">Not lg or center</th>
+						      <td>The folder contains photos of several<br>people and the main person<br>is't in the center.</td>
+						      <td><i class="fa fa-check online"></i></td>
+						    </tr>						   						    
+						    <tr>
+						      <th scope="row">Extra</th>
+						      <td>The folder contains photos of several<br>people but one of them prevails.</td>
+						      <td><i class="fa fa-check online"></i></td>
+						    </tr>
+						    <tr>
+						      <th scope="row">Trash images</th>
+						      <td>The folder contains trash(blurry) photos.</td>
+						      <td><i class="fa fa-check online"></i></td>
+						    </tr>
+						  </tbody>
 						</table>
 						<hr>
-                    	<div class="txt-style">
+          <div class="container gallery-container">		    
+		   	<div class="tz-gallery">
+				<p class="page-description text-center">Normal</p>
+				<div class="row">
+
+		            <div class="col-sm-4 col-md-4">
+                    <a class="lightbox" href="{% static 'images/Samples/Normal/1.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/Normal/1.png' %}" class="img-responsive img-thumbnail" alt="Normal 1" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+                    </div>
+		            <div class="col-sm-4 col-md-4">
+                    <a class="lightbox" href="{% static 'images/Samples/Normal/2.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/Normal/2.png' %}" class="img-responsive img-thumbnail" alt="Normal 2" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+
+		            </div>
+
+		            <div class="col-sm-4 col-md-4">
+                    <a class="lightbox" href="{% static 'images/Samples/Normal/3.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/Normal/3.png' %}" class="img-responsive img-thumbnail" alt="Normal 3" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+
+		            </div>
+		        </div>
+		        <hr>
+	            <p class="page-description text-center">Mutiple</p>
+				<div class="row">
+
+		            <div class="col-sm-4 col-md-3">
+                    <a class="lightbox" href="{% static 'images/Samples/Mutiple/1.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/Mutiple/1.png' %}" class="img-responsive img-thumbnail" alt="Mutiple 1" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+                    </div>
+		            <div class="col-sm-4 col-md-3">
+                    <a class="lightbox" href="{% static 'images/Samples/Mutiple/2.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/Mutiple/2.png' %}" class="img-responsive img-thumbnail" alt="Mutiple 2" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+
+		            </div>
+
+		            <div class="col-sm-4 col-md-3">
+                    <a class="lightbox" href="{% static 'images/Samples/Mutiple/3.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/Mutiple/3.png' %}" class="img-responsive img-thumbnail" alt="Mutiple 3" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+
+		            </div>
+		             <div class="col-sm-4 col-md-3">
+                    <a class="lightbox" href="{% static 'images/Samples/Mutiple/4.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/Mutiple/4.png' %}" class="img-responsive img-thumbnail" alt="Mutiple 4" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+
+		            </div>
+		        </div>
+	            <hr>
+	            <p class="page-description text-center">NotCenter</p>
+				<div class="row">
+
+		            <div class="col-sm-4 col-md-3">
+                    <a class="lightbox" href="{% static 'images/Samples/NotCenter/1.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/NotCenter/1.png' %}" class="img-responsive img-thumbnail" alt="Not Center 1" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+                    </div>
+		            <div class="col-sm-4 col-md-3">
+                    <a class="lightbox" href="{% static 'images/Samples/NotCenter/2.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/NotCenter/2.png' %}" class="img-responsive img-thumbnail" alt="Not Center 2" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+
+		            </div>
+
+		            <div class="col-sm-4 col-md-3">
+                    <a class="lightbox" href="{% static 'images/Samples/NotCenter/3.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/NotCenter/3.png' %}" class="img-responsive img-thumbnail" alt="Not Center 3" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+
+		            </div>
+		             <div class="col-sm-4 col-md-3">
+                    <a class="lightbox" href="{% static 'images/Samples/NotCenter/4.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/NotCenter/4.png' %}" class="img-responsive img-thumbnail" alt="Not Center 4" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+
+		            </div>
+		    	</div>
+
+		    	<hr>
+		    	<p class="page-description text-center">Extra</p>
+				<div class="row">
+
+		            <div class="col-sm-4 col-md-4">
+                    <a class="lightbox" href="{% static 'images/Samples/Extra/1.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/Extra/1.png' %}" class="img-responsive img-thumbnail" alt="Extra 1" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+                    </div>
+		            <div class="col-sm-4 col-md-4">
+                    <a class="lightbox" href="{% static 'images/Samples/Extra/2.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/Extra/2.png' %}" class="img-responsive img-thumbnail" alt="Extra 2" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+
+		            </div>
+
+		            <div class="col-sm-4 col-md-4">
+                    <a class="lightbox" href="{% static 'images/Samples/Extra/3.png' %}">   
+                        <label>
+                            <img src="{% static 'images/Samples/Extra/3.png' %}" class="img-responsive img-thumbnail" alt="Extra 3" /><input type="checkbox" name="img0" value="num1" class="hidden" autocomplete="off"/>
+                        </label>
+                    </a>
+
+		            </div>
+		        </div>
+		        </div>
+		    </div>
+
+		        <hr>
+		    		<div class="txt-style">
 							<p>
 								After sorting all folders, click Next and get new.<br>
 								You should also choose all radiobuttons, else you won't get new folders.<br>
 								Don't worry if you were disconnected from server, your choice will be saved.<br><br>
 							</p>
-						</div>
+					</div>
                     </div><!--//content-->
                 </div><!--//section-inner-->                 
             </section><!--//section-->
         </div>
 	</div>
 
-
-    <footer id="footer" class="dark-wrapper footerPadding">
+   <footer id="footer" class="dark-wrapper footerPadding">
         <div class="container inner">
             <div class="row">
                 <div class="col-sm-4">
@@ -125,6 +273,6 @@
 	<script>
 	    baguetteBox.run('.tz-gallery');
 	</script>
-    </body>
-    {% endblock %}
+</body>
+{% endblock %}
 </html>

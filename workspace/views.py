@@ -170,7 +170,7 @@ def workspace(request):
                 break
     dir_list = (dir_list | shared_folder | (Directory.objects.using('directories').filter(is_busy=0, classifications_amount=0)))[:MAX_DIRECTORIES]
     if dir_list.__len__() == shared_folder.__len__():
-        dir_list.clear()
+        dir_list = Directory.objects.none()
     dir_forms = list()
     dir_forms.clear()
     for directory in dir_list:
