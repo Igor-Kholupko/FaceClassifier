@@ -8,6 +8,7 @@ from workspace.models import ClassifiedByRelation
 class CustomUser(AbstractUser):
     is_logged = models.BooleanField(default=False)
     number_of_sorted_folders = models.PositiveSmallIntegerField(default=0)
+    number_of_checked_folders = models.PositiveSmallIntegerField(default=0)
     last_activity = models.DateTimeField(default=timezone.now)
     quality_of_work = models.DecimalField(default=1.0, max_digits=5, decimal_places=4)
     number_of_sorted_folders_at_a_time = models.PositiveSmallIntegerField(default=0)
