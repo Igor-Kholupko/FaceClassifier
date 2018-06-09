@@ -18,6 +18,7 @@ from threading import Lock
 from _thread import start_new_thread
 from regeneratedb import regeneration_thread
 import re
+from decimal import Decimal
 
 
 # Lock for form synchronizing
@@ -97,21 +98,22 @@ def workspace(request):
                     third_user = CustomUser.objects.get(pk=int(stat_dir.user_id_two))
                     if i.directory_class == stat_dir.directory_class_one:
                         if stat_dir.directory_class_one == stat_dir.directory_class_two:
-                            first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/10+1)/(first_user.number_of_sorted_folders+1)
-                            second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/10+1)/(second_user.number_of_sorted_folders+1)
-                            third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/10+1)/(third_user.number_of_sorted_folders+1)
+                            a = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9")+1)/(first_user.number_of_sorted_folders/Decimal("9")+1)
+                            first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9")+1)/(first_user.number_of_sorted_folders/Decimal("9")+1)
+                            second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9")+1)/(second_user.number_of_sorted_folders/Decimal("9")+1)
+                            third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/Decimal("9")+1)/(third_user.number_of_sorted_folders/Decimal("9")+1)
                         else:
-                            first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/10+1)/(first_user.number_of_sorted_folders+1)
-                            second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/10+1)/(second_user.number_of_sorted_folders+1)
-                            third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/10)/(third_user.number_of_sorted_folders+1)
+                            first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9")+1)/(first_user.number_of_sorted_folders/Decimal("9")+1)
+                            second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9")+1)/(second_user.number_of_sorted_folders/Decimal("9")+1)
+                            third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/Decimal("9"))/(third_user.number_of_sorted_folders/Decimal("9")+1)
                     elif i.directory_class == stat_dir.directory_class_two:
-                        first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/10+1)/(first_user.number_of_sorted_folders+1)
-                        second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/10)/(second_user.number_of_sorted_folders+1)
-                        third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/10+1)/(third_user.number_of_sorted_folders+1)
+                        first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9")+1)/(first_user.number_of_sorted_folders/Decimal("9")+1)
+                        second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9"))/(second_user.number_of_sorted_folders/Decimal("9")+1)
+                        third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/Decimal("9")+1)/(third_user.number_of_sorted_folders/Decimal("9")+1)
                     elif stat_dir.directory_class_one == stat_dir.directory_class_two:
-                        first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/10)/(first_user.number_of_sorted_folders+1)
-                        second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/10+1)/(second_user.number_of_sorted_folders+1)
-                        third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/10+1)/(third_user.number_of_sorted_folders+1)
+                        first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9"))/(first_user.number_of_sorted_folders/Decimal("9")+1)
+                        second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9")+1)/(second_user.number_of_sorted_folders/Decimal("9")+1)
+                        third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/Decimal("9")+1)/(third_user.number_of_sorted_folders/Decimal("9")+1)
                         prev_class = i.directory_class
                         i.directory_class = stat_dir.directory_class_one
                         stat_dir.directory_class_one = prev_class
@@ -121,9 +123,9 @@ def workspace(request):
                         stat_dir.save(using='directories')
                         classified_by_one.save(using='directories')
                     else:
-                        first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/10)/(first_user.number_of_sorted_folders+1)
-                        second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/10)/(second_user.number_of_sorted_folders+1)
-                        third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/10)/(third_user.number_of_sorted_folders+1)
+                        first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9"))/(first_user.number_of_sorted_folders/Decimal("9")+1)
+                        second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9"))/(second_user.number_of_sorted_folders/Decimal("9")+1)
+                        third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/Decimal("9"))/(third_user.number_of_sorted_folders/Decimal("9")+1)
                         journal.log_message("Dir %s(%d) differently classified by '%s', '%s', '%s'!\n" % (i.path, stat_dir.dir_id, first_user.username, second_user.username, third_user.username))
                         journal.log_to_file("bad-folders.log", "Dir %s(%d) differently classified by '%s', '%s', '%s'!\n" % (i.path, stat_dir.dir_id, first_user.username, second_user.username, third_user.username))
                     try:
