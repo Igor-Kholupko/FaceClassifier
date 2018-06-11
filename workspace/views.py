@@ -68,7 +68,10 @@ def workspace(request):
                     except IntegrityError:
                         pass
                 elif i.classifications_amount == 2:
-                    stat_info = StatisticDirectory.objects.using('directories').get(dir=i)
+                    try:
+                        stat_info = StatisticDirectory.objects.using('directories').get(dir=i)
+                    except ObjectDoesNotExist:
+                        return redirect('/workspace/')
                     stat_info.user_id_one = request.user.id
                     request.user.number_of_checked_folders += 1
                     request.user.save()
@@ -80,8 +83,10 @@ def workspace(request):
                         stat_info.save(using='directories')
                     except IntegrityError:
                         pass
-                else:
+                elif i.classifications_amount == 3:
                     stat_info = StatisticDirectory.objects.using('directories').get(dir=i)
+                    if stat_info.user_id_one == request.user.id:
+                        return redirect('/workspace/')
                     stat_info.user_id_two = request.user.id
                     stat_info.directory_class_two = split[1]
                     stat_info.is_completed = True
@@ -135,6 +140,8 @@ def workspace(request):
                         third_user.save()
                     except IntegrityError:
                         pass
+                else:
+                    return redirect('/workspace/')
             except KeyError:
                 continue
         CustomUser.update_user_number_of_sorted_folders(request.user)

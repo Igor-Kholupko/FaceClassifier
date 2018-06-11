@@ -1,6 +1,7 @@
 import os
 import sys
 from django.db.utils import IntegrityError
+from django.db.models import ObjectDoesNotExist
 
 
 def populate_db(root_directory_path=None, thumb_directories=None, check=False, continue_fill=False):
@@ -22,15 +23,28 @@ def populate_db(root_directory_path=None, thumb_directories=None, check=False, c
                     obj.directory_class = 'INVALID_FOLDER_CHECKED'
                     obj.classifications_amount = 1
                     if obj.id%10 == 0:
-                        obj2 = StatisticDirectory.objects.using("directories").get(dir_id=obj.id)
-                        obj2.is_completed = True
-                        obj2.save(using="directories")
+                        try:
+                            obj2 = StatisticDirectory.objects.using("directories").get(dir_id=obj.id)
+                            obj2.is_completed = True
+                            obj2.save(using="directories")
+                        except ObjectDoesNotExist:
+                            pass
                     obj.save(using="directories")
                     sys.stdout.write(" - - [%d] : '%s' have missed thumbnails.\n" % (obj.id, obj.path))
                 else:
                     sys.stdout.write("[%d] : '[unreaded path]' is god.\n" % i)
             else:
                 obj = Directory.objects.using("directories").get(path=original_dirs[i])
+                obj.directory_class = 'NO_THUMBNAILS'
+                obj.classifications_amount = 1
+                if obj.id%10 == 0:
+                    try:
+                        obj2 = StatisticDirectory.objects.using("directories").get(dir_id=obj.id)
+                        obj2.is_completed = True
+                        obj2.save(using="directories")
+                    except ObjectDoesNotExist:
+                        pass
+                obj.save(using="directories")
                 sys.stdout.write(" - - [%d] : '%s' doesn't have thumbnails folder.\n" % (obj.id, obj.path))
                 continue
             j += 1

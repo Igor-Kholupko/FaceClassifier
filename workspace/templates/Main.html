@@ -108,7 +108,7 @@
                                 <div class="funkyradio-success">
                                     <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
                                            value="{{ dir_form.data.id }}_NotLgOrCenter" id="{{ dir_form.data.id }}_NotLgOrCenter" btnType="4" onchange="SetData(this);"/>
-                                    <label class="radioColor" for="{{ dir_form.data.id }}_NotLgOrCenter">Not lg or center</label>
+                                    <label class="radioColor" for="{{ dir_form.data.id }}_NotLgOrCenter">Not center</label>
                                 </div>
                             </div>
 
@@ -132,9 +132,9 @@
                 </div>
                     {% endfor %}
                 <div class="row">
-                    <div class="col-md-12 text-center btn-ok">
+                    <div class="col-md-12 text-center btn-ok" style="margin-bottom: 15px;">
                         <form class="form-horizontal down">
-                            <input type="submit" id="btnNext" value="Next" class="btn btn-secondary" onclick="loginBut()" disabled />
+                            <input type="submit" id="btnNext" value="Next" class="btn btn-secondary" onclick="this.disabled=true,loginBut(),this.form.submit()" disabled />
                         </form>
                     </div>
                 </div>
