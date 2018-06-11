@@ -9,7 +9,8 @@
 	<link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="{% static 'css/gallery-grid.css' %}"> <!-- может быть без этого ? -->
     <link rel="stylesheet" href="{% static 'css/statistics.css' %}">
-	 <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 	<script>
 		$(document).ready(function(e){
@@ -36,7 +37,10 @@
                         <a class="nav-link" href="{% url 'workspace' %}">Workspace</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'user_statistics' %}">Done</a>
+                        <a class="nav-link" href="{% url 'password_edit' %}">Password edit</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'help' %}">Help</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Exit</a>
@@ -49,6 +53,9 @@
 			<section class="section">
                 <div class="section-inner">
                     <h2 class="heading text-center">General statistics</h2>
+                    <div class="w3-light-grey">
+                        <div id="myBar" class="w3-container w3-green w3-center" style="width:{{ percent }}%">{{ dirs_classified }}/{{ dirs_all }}</div>
+                    </div>
                     <div class="content text-center general-table">
 					<table class="table">
 					    <thead class="thead-inverse">
@@ -70,7 +77,7 @@
                                     <i class="fa fa-user offline"></i>
                                 {% endif %}
                             </td>
-					        <th scope="row"><a href="{% url 'log_statistics_detail' pk=user.pk %}">{{ user }}</a></th>
+					        <th>{{ user }}</th>
 					        <td>{{ user.number_of_sorted_folders }}</td>
 					        <td>{{ user.last_activity }}</td>
 					        <td>{{ user.quality_of_work }}</td>

@@ -7,4 +7,6 @@ urlpatterns = [
     path('statistics/', views.statistics, name='user_statistics'),
     path('general_statistics/', views.general_statistics, name='log_general_statistics'),
     url(r'^user_statistics/(?P<pk>\d+)/$', views.statistics_detail, name='log_statistics_detail'),
+    path('edit_password/', views.password_edit, name='password_edit'),
+    path('help/', views.help, name='help'),
 ]

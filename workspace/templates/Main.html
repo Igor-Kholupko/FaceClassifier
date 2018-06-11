@@ -11,11 +11,22 @@
 	<link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="{% static 'css/gallery-grid.css' %}">
     <link rel="stylesheet" href="{% static 'css/baguetteBox.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+	<link rel="stylesheet" href="{% static 'css/adaptive-modal.css' %}">
 
 	<script src="{% static 'js/gallery-grid.js' %}"></script>
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/savedata.js' %}"></script>
+    <script>
+		function showModel() { 
+			document.getElementById('elem').style.display = 'block'; 
+		} 
+		function closeModel() { 
+			document.getElementById('elem').style.display = 'none'; 
+		} 
+  </script>
 </head>
 
 {% block content %}
@@ -33,7 +44,10 @@
                         <a class="nav-link" href="{% url 'workspace' %}">Workspace</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'user_statistics' %}">Done</a>
+                        <a class="nav-link" href="{% url 'password_edit' %}">Password edit</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'help' %}">Help</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Exit</a>
@@ -41,6 +55,10 @@
                 </ul>
             </div>
         </nav>
+         <i class="fa fa-question-circle fa-2x help" onclick="showModel()"></i>
+        {% if main_form.empty %}
+
+        {% else %}
         <form method="post" action="#">
         {% csrf_token %}
             <div class="normalPadding">
@@ -51,16 +69,16 @@
                         <div class="row">
                             {% for item_form in dir_form.item_forms %}
                             <div class="col-sm-4 col-md-2">
-                                <a class="lightbox" href="/media/{{ root_dir }}/{{ dir_form.data.path }}/{{ item_form.data.name }}">
+                                <a class="lightbox" href="/media/identities_0/{{ dir_form.data.path }}/{{ item_form.data.name }}">
                                     <label>
-                                        <img src="/media/{{ thumb_dir }}/{{ dir_form.data.path }}/{{ item_form.data.name }}" name="checkbox{{ item_form.data.id }}" class="img-responsive img-thumbnail checked" alt="{{ item_form.data.name }}" onclick="clickToImage(this);" />
+                                        <img src="/media/identities_0_100/{{ dir_form.data.path }}/{{ item_form.data.name }}" name="checkbox{{ item_form.data.id }}" class="img-responsive img-thumbnail checked" alt="{{ item_form.data.name }}" onclick="clickToImage(this);" />
                                         <input type="checkbox" name="checkbox" id="checkbox{{ item_form.data.id }}" value="{{ item_form.data.id }}" class="hidden" autocomplete="off" filePathId="{{ dir_form.data.id }}" onclick="SetCheckBox(this);" />
                                     </label>
                                 </a>
                             </div>
                             {% endfor %}
                         </div>
-                    <div class="funkyradio" id="funkyradio">
+                    <div class="funkyradio" id="funkyradio2">
                         <div class="row">
                             <div class="col-sm-4 col-md-2">
                                 <div class="funkyradio-success">
@@ -73,39 +91,39 @@
                             <div class="col-sm-4 col-md-2">
                                 <div class="funkyradio-success">
                                     <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
-                                           value="{{ dir_form.data.id }}_Label" id="{{ dir_form.data.id }}_Label" btnType="2" onchange="SetData(this);"/>
-                                    <label for="{{ dir_form.data.id }}_Label">Label</label>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-4 col-md-2">
-                                <div class="funkyradio-success">
-                                    <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
-                                           value="{{ dir_form.data.id }}_Extra" id="{{ dir_form.data.id }}_Extra" btnType="3" onchange="SetData(this);"/>
-                                    <label for="{{ dir_form.data.id }}_Extra">Extra</label>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-4 col-md-2">
-                                <div class="funkyradio-success">
-                                    <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
-                                           value="{{ dir_form.data.id }}_Blurry" id="{{ dir_form.data.id }}_Blurry" btnType="4" onchange="SetData(this);"/>
-                                    <label for="{{ dir_form.data.id }}_Blurry">Blurry</label>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-4 col-md-2">
-                                <div class="funkyradio-success">
-                                    <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
-                                           value="{{ dir_form.data.id }}_Multiple" id="{{ dir_form.data.id }}_Multiple" btnType="5" onchange="SetData(this);"/>
+                                           value="{{ dir_form.data.id }}_Multiple" id="{{ dir_form.data.id }}_Multiple" btnType="2" onchange="SetData(this);"/>
                                     <label for="{{ dir_form.data.id }}_Multiple">Multiple</label>
                                 </div>
                             </div>
+
                             <div class="col-sm-4 col-md-2">
                                 <div class="funkyradio-success">
                                     <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
-                                           value="{{ dir_form.data.id }}_Nonperson" id="{{ dir_form.data.id }}_Nonperson" btnType="6" onchange="SetData(this);"/>
-                                    <label for="{{ dir_form.data.id }}_Nonperson">Nonperson</label>
+                                           value="{{ dir_form.data.id }}_TrashFolder" id="{{ dir_form.data.id }}_TrashFolder" btnType="3" onchange="SetData(this);"/>
+                                    <label for="{{ dir_form.data.id }}_TrashFolder">Trash folder</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="{{ dir_form.data.id }}_NotLgOrCenter" id="{{ dir_form.data.id }}_NotLgOrCenter" btnType="4" onchange="SetData(this);"/>
+                                    <label class="radioColor" for="{{ dir_form.data.id }}_NotLgOrCenter">Not center</label>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="{{ dir_form.data.id }}_Extra" id="{{ dir_form.data.id }}_Extra" btnType="5" onchange="SetData(this);"/>
+                                    <label class="radioColor" for="{{ dir_form.data.id }}_Extra">Extra</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-md-2">
+                                <div class="funkyradio-success">
+                                    <input type="radio" name="radio_{{ forloop.counter }}" radioGroupId='{{ dir_form.data.id }}'
+                                           value="{{ dir_form.data.id }}_TrashImages" id="{{ dir_form.data.id }}_TrashImages" btnType="6" onchange="SetData(this);"/>
+                                    <label class="radioColor" for="{{ dir_form.data.id }}_TrashImages">Trash images</label>
                                 </div>
                             </div>
                         </div>
@@ -114,15 +132,76 @@
                 </div>
                     {% endfor %}
                 <div class="row">
-                    <div class="col-md-12 text-center">
+                    <div class="col-md-12 text-center btn-ok" style="margin-bottom: 15px;">
                         <form class="form-horizontal down">
-                             <input type="submit" value="Next" class="btn btn-default"/>
+                            <input type="submit" id="btnNext" value="Next" class="btn btn-secondary" onclick="this.disabled=true,loginBut(),this.form.submit()" disabled />
                         </form>
                     </div>
                 </div>
             </div>
             </div>
-        </form>
+                </form>
+        {% endif %}
+		<div class="dm-overlay" id="elem"> 
+			<div class="dm-table"> 
+				<div class="dm-cell"> 
+					<div class="dm-modal"> 
+						<div class="pull-right"> 
+							<span class="close" onclick="closeModel()">&times;</span> 
+						</div> 
+						<section class="section"> 
+							<div class="section-inner"> 
+								<h2 class="heading text-center help-color">Help</h2> 
+								<div class="content text-center"> 
+									<table class="table table-reflow table-hover table-striped"> 
+										<thead> 
+											<tr> 
+											<th>Radiobutton</th> 
+											<th>Description</th> 
+											<th>Click on photos</th> 
+											</tr> 
+										</thead> 
+										<tbody> 
+											<tr> 
+												<th scope="row">Normal</th> 
+												<td>The folder contains photos<br>of the same person.</td> 
+												<td><i class="fa fa-minus not-online"></i></td> 
+											</tr> 
+											<tr> 
+												<th scope="row">Multiple</th> 
+												<td>The folder contains photos of several<br>people but no one prevails.</td> 
+												<td><i class="fa fa-minus not-online"></i></td> 
+											</tr> 
+											<tr> 
+												<th scope="row">Trash folder</th> 
+												<td>The folder contains random photos and<br>there are no people on them.</td> 
+												<td><i class="fa fa-minus not-online"></i></td> 
+											</tr> 
+											<tr> 
+												<th scope="row">Not lg or center</th> 
+												<td>The folder contains photos of several<br>people and the main person<br>is't in the center.</td> 
+												<td><i class="fa fa-check online"></i></td> 
+											</tr> 
+											<tr> 
+												<th scope="row">Extra</th> 
+												<td>The folder contains photos of several<br>people but one of them prevails.</td> 
+												<td><i class="fa fa-check online"></i></td> 
+											</tr> 
+											<tr> 
+												<th scope="row">Trash images</th> 
+												<td>The folder contains trash(blurry) photos.</td> 
+												<td><i class="fa fa-check online"></i></td> 
+											</tr> 
+										</tbody> 
+									</table> 
+								</div> 
+							</div> 
+						</section> 
+					</div> 
+				</div> 
+			</div> 
+		</div>
+
 
     <footer id="footer" class="dark-wrapper">
         <div class="container inner">
