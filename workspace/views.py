@@ -123,12 +123,12 @@ def workspace(request):
                         first_user = CustomUser.objects.get(pk=int(classified_by_one.user_id))
                         second_user = CustomUser.objects.get(pk=int(stat_dir.user_id_one))
                         third_user = CustomUser.objects.get(pk=int(stat_dir.user_id_two))
-                        temp_list_of_item_zero = DirectoryItem.objects.using('directories').filter(dir=i)
+                        temp_list_of_item_zero = DirectoryItem.objects.using('directories').filter(dir=i, is_bad=True)
                         list_of_item_zero = list()
                         list_of_item_zero.clear()
                         if temp_list_of_item_zero:
                             for el in temp_list_of_item_zero:
-                                list_of_item_zero.append(el.id)
+                                list_of_item_zero.append(str(el.id))
                         else:
                             list_of_item_zero.append('')
                         list_of_item_one = stat_dir.bad_photos_one.split(',')
