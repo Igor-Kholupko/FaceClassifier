@@ -51,7 +51,20 @@ def workspace(request):
     if request.method == "POST":
         time_moment = timezone.timedelta(hours=timezone.now().time().hour, minutes=timezone.now().time().minute, seconds=timezone.now().second)
         d = dict(request.POST)
+        item_list = list()
+        item_list.clear()
         dirs_counter = 0
+        try:
+            checkboxes = d['checkbox']
+            for i in checkboxes:
+                i = DirectoryItem.objects.using('directories').get(id=i)
+                if i.dir.classifications_amount == 0:
+                    i.is_bad = True
+                    i.save(using='directories')
+                else:
+                    item_list.append(i)
+        except KeyError:
+            pass
         for i in range(1, MAX_DIRECTORIES+1):
             try:
                 split = re.split("[_\s]", d[("radio_%d" % i)][0])
@@ -67,81 +80,104 @@ def workspace(request):
                         classified_by.save(using='directories')
                     except IntegrityError:
                         pass
-                elif i.classifications_amount == 2:
-                    try:
+                else:
+                    temp_list = list()
+                    temp_list.clear()
+                    if item_list:
+                        for el in [x for x in item_list if x.dir == i]:
+                            temp_list.append(el.id)
+                    if i.classifications_amount == 2:
+                        try:
+                            stat_info = StatisticDirectory.objects.using('directories').get(dir=i)
+                        except ObjectDoesNotExist:
+                            return redirect('/workspace/')
+                        stat_info.user_id_one = request.user.id
+                        if temp_list:
+                            stat_info.bad_photos_one = ','.join(str(e) for e in temp_list)
+                        request.user.number_of_checked_folders += 1
+                        request.user.save()
+                        stat_info.directory_class_one = split[1]
+                        i.is_busy = 0
+                        i.save(using='directories')
+                        try:
+                            stat_info.save(using='directories')
+                        except IntegrityError:
+                            pass
+                    elif i.classifications_amount == 3:
                         stat_info = StatisticDirectory.objects.using('directories').get(dir=i)
-                    except ObjectDoesNotExist:
-                        return redirect('/workspace/')
-                    stat_info.user_id_one = request.user.id
-                    request.user.number_of_checked_folders += 1
-                    request.user.save()
-                    stat_info.directory_class_one = split[1]
-                    i.is_busy = 0
-
-                    i.save(using='directories')
-                    try:
-                        stat_info.save(using='directories')
-                    except IntegrityError:
-                        pass
-                elif i.classifications_amount == 3:
-                    stat_info = StatisticDirectory.objects.using('directories').get(dir=i)
-                    if stat_info.user_id_one == request.user.id:
-                        return redirect('/workspace/')
-                    stat_info.user_id_two = request.user.id
-                    stat_info.directory_class_two = split[1]
-                    stat_info.is_completed = True
-                    i.is_busy = 0
-                    i.save(using='directories')
-                    try:
-                        stat_info.save(using='directories')
-                    except IntegrityError:
-                        pass
-                    classified_by_one = ClassifiedByRelation.objects.using('directories').get(dir=i)
-                    stat_dir = StatisticDirectory.objects.using('directories').get(dir_id=int(split[0]))
-                    first_user = CustomUser.objects.get(pk=int(classified_by_one.user_id))
-                    second_user = CustomUser.objects.get(pk=int(stat_dir.user_id_one))
-                    third_user = CustomUser.objects.get(pk=int(stat_dir.user_id_two))
-                    if i.directory_class == stat_dir.directory_class_one:
-                        if stat_dir.directory_class_one == stat_dir.directory_class_two:
-                            a = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9")+1)/(first_user.number_of_sorted_folders/Decimal("9")+1)
+                        if temp_list:
+                            stat_info.bad_photos_two = ','.join(str(e) for e in temp_list)
+                        if stat_info.user_id_one == request.user.id:
+                            return redirect('/workspace/')
+                        stat_info.user_id_two = request.user.id
+                        stat_info.directory_class_two = split[1]
+                        stat_info.is_completed = True
+                        i.is_busy = 0
+                        i.save(using='directories')
+                        try:
+                            stat_info.save(using='directories')
+                        except IntegrityError:
+                            pass
+                        classified_by_one = ClassifiedByRelation.objects.using('directories').get(dir=i)
+                        stat_dir = StatisticDirectory.objects.using('directories').get(dir_id=int(split[0]))
+                        first_user = CustomUser.objects.get(pk=int(classified_by_one.user_id))
+                        second_user = CustomUser.objects.get(pk=int(stat_dir.user_id_one))
+                        third_user = CustomUser.objects.get(pk=int(stat_dir.user_id_two))
+                        temp_list_of_item_zero = DirectoryItem.objects.using('directories').filter(dir=i)
+                        list_of_item_zero = list()
+                        list_of_item_zero.clear()
+                        if temp_list_of_item_zero:
+                            for el in temp_list_of_item_zero:
+                                list_of_item_zero.append(el.id)
+                        else:
+                            list_of_item_zero.append('')
+                        list_of_item_one = stat_dir.bad_photos_one.split(',')
+                        list_of_item_two = stat_dir.bad_photos_two.split(',')
+                        if i.directory_class == stat_dir.directory_class_one \
+                                and set(list_of_item_zero) == set(list_of_item_one):
+                            if stat_dir.directory_class_one == stat_dir.directory_class_two \
+                                    and set(list_of_item_zero) == set(list_of_item_two):
+                                a = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9")+1)/(first_user.number_of_sorted_folders/Decimal("9")+1)
+                                first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9")+1)/(first_user.number_of_sorted_folders/Decimal("9")+1)
+                                second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9")+1)/(second_user.number_of_sorted_folders/Decimal("9")+1)
+                                third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/Decimal("9")+1)/(third_user.number_of_sorted_folders/Decimal("9")+1)
+                            else:
+                                first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9")+1)/(first_user.number_of_sorted_folders/Decimal("9")+1)
+                                second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9")+1)/(second_user.number_of_sorted_folders/Decimal("9")+1)
+                                third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/Decimal("9"))/(third_user.number_of_sorted_folders/Decimal("9")+1)
+                        elif i.directory_class == stat_dir.directory_class_two \
+                                and set(list_of_item_zero) == set(list_of_item_two):
                             first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9")+1)/(first_user.number_of_sorted_folders/Decimal("9")+1)
+                            second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9"))/(second_user.number_of_sorted_folders/Decimal("9")+1)
+                            third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/Decimal("9")+1)/(third_user.number_of_sorted_folders/Decimal("9")+1)
+                        elif stat_dir.directory_class_one == stat_dir.directory_class_two \
+                                and set(list_of_item_one) == set(list_of_item_two):
+                            first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9"))/(first_user.number_of_sorted_folders/Decimal("9")+1)
                             second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9")+1)/(second_user.number_of_sorted_folders/Decimal("9")+1)
                             third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/Decimal("9")+1)/(third_user.number_of_sorted_folders/Decimal("9")+1)
+                            prev_class = i.directory_class
+                            i.directory_class = stat_dir.directory_class_one
+                            stat_dir.directory_class_one = prev_class
+                            classified_by_one.user_id = second_user.id
+                            stat_dir.user_id_one = first_user.id
+                            i.save(using='directories')
+                            stat_dir.save(using='directories')
+                            classified_by_one.save(using='directories')
                         else:
-                            first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9")+1)/(first_user.number_of_sorted_folders/Decimal("9")+1)
-                            second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9")+1)/(second_user.number_of_sorted_folders/Decimal("9")+1)
+                            first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9"))/(first_user.number_of_sorted_folders/Decimal("9")+1)
+                            second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9"))/(second_user.number_of_sorted_folders/Decimal("9")+1)
                             third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/Decimal("9"))/(third_user.number_of_sorted_folders/Decimal("9")+1)
-                    elif i.directory_class == stat_dir.directory_class_two:
-                        first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9")+1)/(first_user.number_of_sorted_folders/Decimal("9")+1)
-                        second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9"))/(second_user.number_of_sorted_folders/Decimal("9")+1)
-                        third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/Decimal("9")+1)/(third_user.number_of_sorted_folders/Decimal("9")+1)
-                    elif stat_dir.directory_class_one == stat_dir.directory_class_two:
-                        first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9"))/(first_user.number_of_sorted_folders/Decimal("9")+1)
-                        second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9")+1)/(second_user.number_of_sorted_folders/Decimal("9")+1)
-                        third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/Decimal("9")+1)/(third_user.number_of_sorted_folders/Decimal("9")+1)
-                        prev_class = i.directory_class
-                        i.directory_class = stat_dir.directory_class_one
-                        stat_dir.directory_class_one = prev_class
-                        classified_by_one.user_id = second_user.id
-                        stat_dir.user_id_one = first_user.id
-                        i.save(using='directories')
-                        stat_dir.save(using='directories')
-                        classified_by_one.save(using='directories')
+                            journal.log_message("Dir %s(%d) differently classified by '%s', '%s', '%s'!\n" % (i.path, stat_dir.dir_id, first_user.username, second_user.username, third_user.username))
+                            journal.log_to_file("bad-folders.log", "Dir %s(%d) differently classified by '%s', '%s', '%s'!\n" % (i.path, stat_dir.dir_id, first_user.username, second_user.username, third_user.username))
+                        try:
+                            first_user.number_of_checked_folders += 1
+                            first_user.save()
+                            second_user.save()
+                            third_user.save()
+                        except IntegrityError:
+                            pass
                     else:
-                        first_user.quality_of_work = (first_user.quality_of_work*first_user.number_of_sorted_folders/Decimal("9"))/(first_user.number_of_sorted_folders/Decimal("9")+1)
-                        second_user.quality_of_work = (second_user.quality_of_work*second_user.number_of_sorted_folders/Decimal("9"))/(second_user.number_of_sorted_folders/Decimal("9")+1)
-                        third_user.quality_of_work = (third_user.quality_of_work*third_user.number_of_sorted_folders/Decimal("9"))/(third_user.number_of_sorted_folders/Decimal("9")+1)
-                        journal.log_message("Dir %s(%d) differently classified by '%s', '%s', '%s'!\n" % (i.path, stat_dir.dir_id, first_user.username, second_user.username, third_user.username))
-                        journal.log_to_file("bad-folders.log", "Dir %s(%d) differently classified by '%s', '%s', '%s'!\n" % (i.path, stat_dir.dir_id, first_user.username, second_user.username, third_user.username))
-                    try:
-                        first_user.number_of_checked_folders += 1
-                        first_user.save()
-                        second_user.save()
-                        third_user.save()
-                    except IntegrityError:
-                        pass
-                else:
-                    return redirect('/workspace/')
+                        return redirect('/workspace/')
             except KeyError:
                 continue
         CustomUser.update_user_number_of_sorted_folders(request.user)
@@ -153,14 +189,7 @@ def workspace(request):
                                                                          minutes=user.last_main_get_request.minute,
                                                                          seconds=user.last_main_get_request.second))/dirs_counter + user.average_folder_time)/2
         user.save()
-        try:
-            checkboxes = d['checkbox']
-            for i in checkboxes:
-                i = DirectoryItem.objects.using('directories').get(id=i)
-                i.is_bad = True
-                i.save(using='directories')
-        except KeyError:
-            pass
+
         lock.release()
         return redirect('/workspace/')
     dir_list = Directory.objects.using('directories').filter(is_busy=request.user.id)
@@ -190,6 +219,7 @@ def workspace(request):
         directory.save(using='directories')
         dir_form = DirectoryForm(data=directory)
         dir_form.item_forms = list()
+
         for item in DirectoryItem.objects.using('directories').filter(dir_id=directory):
             item_form = DirectoryItemForm(data=item)
             dir_form.item_forms.append(item_form)
